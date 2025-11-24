@@ -1,0 +1,29 @@
+{
+  "name": "dronesbackend",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/DmitriyPechenyuk0/DronesBackend#readme",
+  "bugs": {
+    "url": "https://github.com/DmitriyPechenyuk0/DronesBackend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitriyPechenyuk0/DronesBackend.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.0.0",
+    "@types/express": "^5.0.5",
+    "express": "^5.1.0",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "prisma": "^7.0.0"
+  }
+}
