@@ -1,10 +1,11 @@
 # Drones
 
+## Langs of README
 - [English](README.md)
 - [Днепровский диалект](README.dp.md)
 - [Українська](README.uk.md)
 
-## Технологии
+## Technologies
 
 - Node.js
 - Express.js
@@ -12,7 +13,7 @@
 - JWT
 - Bcrypt
 
-## Установка
+## Installation
 ```bash
 git clone https://github.com/DmitriyPechenyuk0/DronesBackend.git
 cd DronesBackend
@@ -21,34 +22,34 @@ cp .env.example .env
 npm run dev
 ```
 
-## Структура проекта
+## Project structure
 ```
-каминг сун
+coming soon
 ```
 
-## Правила написания кода
+## Rules for writing code
 
-### Именование
+### Naming
 
-**Файлы:** - dot-case: `user.controller.ts`, `auth.middleware.ts`
+**Files:** - dot-case: `user.controller.ts`, `auth.middleware.ts`
 
-**Переменные и функции:** 
+**Variables and functions:** 
 - camelCase: `userId`, `getUserById()`
-- Константы: UPPER_SNAKE_CASE - `MAX_ATTEMPTS`
-- Булевые: `isActive`, `hasPermission`, `canEdit`
+- Constants: UPPER_SNAKE_CASE - `MAX_ATTEMPTS`
+- Boolean: `isActive`, `hasPermission`, `canEdit`
 
-**Классы** - PascalCase - `UserService` `DatabaseConnection`
+**Classes** - PascalCase - `UserService` `DatabaseConnection`
 
 
-### Основные принципы
+### Basic principles
 
-2. **DRY** - не дублировать код
-3. **Простота чтения** - избегать вложенных if
-5. **Деструктуризация** объектов
-7. **Обработка всех ошибок** через try-catch
-8. **Валидация** всех входящих данных
+1. **DRY** - don't duplicate code
+2. **Readability** - avoid nested if statements
+3. **Destructuring** objects
+4. **Handling all errors** with try-catch
+5. **Validating** all incoming data
 
-### Структура ответов api
+### API response structure
 ```javascript
 // Success
 {
@@ -63,13 +64,13 @@ npm run dev
 }
 ```
 
-### Обязательно
+### Required
 
-- Валидация входных данных
-- JWT для авторизации
-- Bcrypt для паролей
+- Input data validation
+- JWT for authorization
+- Bcrypt for passwords
 
-## Переменные окружения
+## Environment variables
 
 ```env
 PORT=3000
@@ -78,10 +79,10 @@ JWT_SECRET=
 JWT_EXPIRES_IN=7d
 ```
 
-## Команды
+## Commands
 
 ```bash
-npm run dev      # Разработка
-npm start        # Продакшн
+npm run dev      # Development
+npm start        # Production
 ```
 
