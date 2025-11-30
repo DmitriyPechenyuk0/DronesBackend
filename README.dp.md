@@ -1,8 +1,8 @@
 # Drones
 
 - [English](README.md)
-- [Днепровский диалект](README.dp.md)
 - [Українська](README.uk.md)
+- [Днепровский диалект](README.dp.md)
 
 ## Технологии
 
