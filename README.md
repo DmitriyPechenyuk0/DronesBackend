@@ -1,5 +1,9 @@
 # Drones
 
+- [English](README.md)
+- [Днепровский диалект](README.dp.md)
+- [Українська](README.uk.md)
+
 ## Технологии
 
 - Node.js
@@ -80,3 +84,4 @@ JWT_EXPIRES_IN=7d
 npm run dev      # Разработка
 npm start        # Продакшн
 ```
+
