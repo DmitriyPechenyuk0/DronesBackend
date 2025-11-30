@@ -31,6 +31,8 @@ coming soon
 
 ### Naming
 
+**Branches** - in format "feature/short_description_of_task"
+
 **Files:** - dot-case: `user.controller.ts`, `auth.middleware.ts`
 
 **Variables and functions:** 

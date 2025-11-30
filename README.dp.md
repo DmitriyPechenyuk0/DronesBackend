@@ -1,5 +1,6 @@
 # Drones
 
+## Языки README
 - [English](README.md)
 - [Українська](README.uk.md)
 - [Днепровский диалект](README.dp.md)
@@ -29,6 +30,8 @@ npm run dev
 ## Правила написания кода
 
 ### Именование
+
+**Ветки** - в формате "feature/короткое_описание_таски"
 
 **Файлы:** - dot-case: `user.controller.ts`, `auth.middleware.ts`
 

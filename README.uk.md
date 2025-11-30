@@ -1,5 +1,6 @@
 # Drones
 
+## Мови README
 - [English](README.md)
 - [Українська](README.uk.md)
 - [Днепровский диалект](README.dp.md)
@@ -30,6 +31,8 @@ npm run dev
 
 ### Іменування
 
+**Гілки** - у форматі "feature/короткий_опис_таски"
+
 **Файли:** - dot-case: `user.controller.ts`, `auth.middleware.ts`
 
 **Змінні та функції:** 
@@ -38,7 +41,6 @@ npm run dev
 - Булеві: `isActive`, `hasPermission`, `canEdit`
 
 **Класи** - PascalCase - `UserService` `DatabaseConnection`
-
 
 ### Основні принципи
 
