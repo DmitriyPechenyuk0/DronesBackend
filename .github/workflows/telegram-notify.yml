@@ -13,4 +13,4 @@ jobs:
         run: |
           curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-          -d text="Push в ${{ github.repository }}%0A👤 От: ${{ github.actor }}%0A📝 Коммит: ${{ github.event.head_commit.message }}%0A🔗 ${{ github.event.head_commit.url }}"
+          -d text="🔔 New push in ${{ github.repository }}%0A👤 by: ${{ github.actor }}%0A📝 commit: ${{ github.event.head_commit.message }}%0A🔗 link ${{ github.event.head_commit.url }}"
