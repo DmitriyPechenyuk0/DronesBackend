@@ -84,6 +84,8 @@ model Product {
   orderDetails  OrderDetail[]
   blocks        Block[]
   techDetails   TechDetail[]
+  categoryId    Int 
+  category      Category      @relation(fields: [categoryId], references: [id])
 }
 
 model Block {
@@ -98,6 +100,7 @@ model Block {
 model Category {
   id            Int      @id @default(autoincrement())
   title         String   @unique
+  image         String?
   blocks        Block[]
 }
 
