@@ -1,12 +1,13 @@
-import express from 'express'
+import express from 'express';
+import productRoutes from './product/product.routes';
 
-const app: express.Express = express()
-app.use(express.json())
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-const PORT: number = 8000
-const HOST: string = 'localhost'
-const PROTOCOL: string = `http`
+app.use(express.json());
 
-app.listen(PORT, HOST, () => {
-    console.log(`Server started on ${PROTOCOL}://${HOST}:${PORT}`)
-})
+app.use('/products', productRoutes); 
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
