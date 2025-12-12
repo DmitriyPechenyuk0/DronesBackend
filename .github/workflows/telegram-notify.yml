@@ -1,0 +1,110 @@
+name: Telegram Notifications
+
+on:
+  push:
+    branches-ignore:
+      - master
+  pull_request:
+    types: [opened, closed, reopened, edited, review_requested, ready_for_review, synchronize]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      
+      - name: Get last commit message
+        id: commit
+        if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+          COMMIT_MSG=$(echo "$COMMIT_MSG" | sed 's/"/\\"/g' | sed "s/'/\\'/g")
+          echo "message=$COMMIT_MSG" >> $GITHUB_OUTPUT
+      
+      - name: Send notification
+        run: |
+          # =============== PUSH EVENT ===============
+          if [ "${{ github.event_name }}" == "push" ]; then
+            MESSAGE="🔔 <b>Push</b>%0A%0A"
+            MESSAGE="${MESSAGE}<b>Repo:</b> <a href='https://github.com/${{ github.repository }}'>${{ github.repository }}</a>%0A"
+            MESSAGE="${MESSAGE}<b>Branch:</b> <code>${{ github.ref_name }}</code>%0A"
+            MESSAGE="${MESSAGE}<b>Author:</b> <a href='https://github.com/${{ github.actor }}'>@${{ github.actor }}</a>%0A%0A"
+            MESSAGE="${MESSAGE}💬 <i>${{ github.event.head_commit.message }}</i>%0A%0A"
+            MESSAGE="${MESSAGE}<a href='${{ github.event.head_commit.url }}'>→ View commit</a>"
+          
+          # =============== PULL REQUEST EVENT ===============
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            
+            if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
+              ICON="✅"; TITLE="<b>PR Merged</b>"
+            elif [ "${{ github.event.action }}" == "closed" ]; then
+              ICON="❌"; TITLE="<b>PR Closed</b>"
+            elif [ "${{ github.event.action }}" == "opened" ]; then
+              ICON="🆕"; TITLE="<b>New PR</b>"
+            elif [ "${{ github.event.action }}" == "reopened" ]; then
+              ICON="🔄"; TITLE="<b>PR Reopened</b>"
+            elif [ "${{ github.event.action }}" == "edited" ]; then
+              ICON="✏️"; TITLE="<b>PR Edited</b>"
+            elif [ "${{ github.event.action }}" == "review_requested" ]; then
+              ICON="👀"; TITLE="<b>Review Requested</b>"
+            elif [ "${{ github.event.action }}" == "ready_for_review" ]; then
+              ICON="✨"; TITLE="<b>Ready for Review</b>"
+            elif [ "${{ github.event.action }}" == "synchronize" ]; then
+              ICON="🔄"; TITLE="<b>PR Updated</b>"
+            else
+              ICON="📬"; TITLE="<b>PR Event</b>"
+            fi
+            
+            MESSAGE="${ICON} ${TITLE}%0A%0A"
+            MESSAGE="${MESSAGE}<b>${{ github.event.pull_request.title }}</b>%0A%0A"
+            MESSAGE="${MESSAGE}<b>Repo:</b> <a href='https://github.com/${{ github.repository }}'>${{ github.repository }}</a>%0A"
+            MESSAGE="${MESSAGE}<b>Branch:</b> <code>${{ github.event.pull_request.head.ref }}</code> → <code>${{ github.event.pull_request.base.ref }}</code>%0A"
+            MESSAGE="${MESSAGE}<b>Author:</b> <a href='https://github.com/${{ github.event.pull_request.user.login }}'>@${{ github.event.pull_request.user.login }}</a>%0A"
+            
+            if [ "${{ github.event.action }}" == "synchronize" ]; then
+              MESSAGE="${MESSAGE}%0A💬 <i>${{ steps.commit.outputs.message }}</i>%0A"
+            fi
+            
+            if [ "${{ github.event.action }}" == "review_requested" ] && [ -n "${{ github.event.requested_reviewer.login }}" ]; then
+              MESSAGE="${MESSAGE}<b>Reviewer:</b> <a href='https://github.com/${{ github.event.requested_reviewer.login }}'>@${{ github.event.requested_reviewer.login }}</a>%0A"
+            fi
+            
+            MESSAGE="${MESSAGE}%0A<a href='${{ github.event.pull_request.html_url }}'>→ View PR</a>"
+          
+          # =============== PULL REQUEST REVIEW EVENT ===============
+          elif [ "${{ github.event_name }}" == "pull_request_review" ]; then
+            
+            if [ "${{ github.event.review.state }}" == "approved" ]; then
+              ICON="✅"; STATUS="<b>Approved</b>"
+            elif [ "${{ github.event.review.state }}" == "changes_requested" ]; then
+              ICON="🔧"; STATUS="<b>Changes Requested</b>"
+            elif [ "${{ github.event.review.state }}" == "commented" ]; then
+              ICON="💬"; STATUS="<b>Commented</b>"
+            else
+              ICON="👀"; STATUS="<b>Reviewed</b>"
+            fi
+            
+            MESSAGE="${ICON} ${STATUS}%0A%0A"
+            MESSAGE="${MESSAGE}<b>${{ github.event.pull_request.title }}</b>%0A%0A"
+            MESSAGE="${MESSAGE}<b>Repo:</b> <a href='https://github.com/${{ github.repository }}'>${{ github.repository }}</a>%0A"
+            MESSAGE="${MESSAGE}<b>Reviewer:</b> <a href='https://github.com/${{ github.event.review.user.login }}'>@${{ github.event.review.user.login }}</a>%0A"
+            
+            if [ -n "${{ github.event.review.body }}" ]; then
+              REVIEW_BODY=$(echo "${{ github.event.review.body }}" | head -c 200)
+              MESSAGE="${MESSAGE}%0A💬 <i>${REVIEW_BODY}</i>%0A"
+            fi
+            
+            MESSAGE="${MESSAGE}%0A<a href='${{ github.event.review.html_url }}'>→ View review</a>"
+          fi
+          
+          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d parse_mode=HTML \
+          -d disable_web_page_preview=false \
+          -d text="${MESSAGE}"
