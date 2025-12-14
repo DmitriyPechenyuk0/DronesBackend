@@ -16,7 +16,8 @@
   "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node src/server.ts"
+    "start": "ts-node src/server.ts",
+    "st": "npx prisma studio"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.1.0",
@@ -32,6 +33,6 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@types/node": "^24.7.1"
+    "@types/node": "^24.10.4"
   }
 }
