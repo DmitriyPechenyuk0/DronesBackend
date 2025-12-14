@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { CategoryService } from "./categoryService";
 
-const categoryService = new CategoryService();
-
 export class CategoryController {
+    const service = new CategoryService();
+
     async getAll(req: Request, res: Response) {
-        const categories = await categoryService.getAll();
+        const categories = await this.service.getAll();
         res.json(categories);
     }
 
@@ -13,7 +13,7 @@ export class CategoryController {
         const id = Number(req.params.id);
 
         try {
-        const category = await categoryService.getById(id);
+        const category = await this.sService.getById(id);
         res.json(category);
         } catch {
         res.status(404).json({ message: "Category not found" });
@@ -22,8 +22,13 @@ export class CategoryController {
 
     async create(req: Request, res: Response) {
         const { title, img } = req.body;
-        const created = await categoryService.create(title, img);
-        res.status(201).json(created);
+
+        if (!title) {
+        return res.status(400).json({ message: "Title is required" });
+        }
+
+        const category = await this.service.create(title, img);
+        res.status(201).json(category);
     }
 
     async update(req: Request, res: Response) {
@@ -31,7 +36,7 @@ export class CategoryController {
         const { title, img } = req.body;
 
         try {
-        const updated = await categoryService.update(id, title, img);
+        const updated = await this.service.update(id, title, img);
         res.json(updated);
         } catch {
         res.status(404).json({ message: "Category not found" });
@@ -42,11 +47,12 @@ export class CategoryController {
         const id = Number(req.params.id);
 
         try {
-        await categoryService.delete(id);
+        await this.service.delete(id);
         res.json({ message: "Category deleted" });
         } catch {
         res.status(404).json({ message: "Category not found" });
         }
     }
 }
+
 
