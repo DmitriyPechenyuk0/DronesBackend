@@ -16,7 +16,26 @@ export type ProductDetail = Prisma.ProductGetPayload<{
 		};
 	};
 }>;
+export interface ProductTechDetail {
+	characteristic: string;
+	description: string;
+}
 
+export interface ProductBlock {
+	header: string;
+	description: string;
+	image: string;
+	details: ProductTechDetail[];
+}
+
+export interface ProductCreateBody {
+	name: string;
+	price: number;
+	discount: number;
+	category_id: number;
+	amount: number;
+	blocks: ProductBlock[];
+}
 export interface ProductGetAllSuccessResponse {
 	success: true;
 	data: {
@@ -25,9 +44,7 @@ export interface ProductGetAllSuccessResponse {
 }
 export interface ProductGetByIdSuccessResponse {
 	success: boolean;
-	data: {
-		products: ProductDetail;
-	};
+	data: ProductDetail | null | undefined;
 }
 
 export interface ProductErrorResponse {
@@ -38,27 +55,10 @@ export interface ProductDeleteSuccessResponse {
 	success: true;
 	data: null;
 }
-export interface ProductCreateBody {
-	name: string;
-	price: number;
-	description: string;
-	discount: number;
-	category_id: number;
-	blocks: {
-		header: string;
-		description: string;
-		image: string;
-		details: {
-			characteristic: string;
-			description: string;
-		}[];
-	}[];
-}
 
 export interface ProductPartialUpdateBody {
 	name?: string;
 	price?: number;
-	description?: string;
 	discount?: number;
 	category_id?: number;
 	blocks?: {
@@ -77,7 +77,9 @@ export interface ProductDeleteBody {
 
 export type ProductFullUpdateBody = ProductCreateBody;
 
-export type ProductGetAllResponse = ProductErrorResponse | ProductGetAllSuccessResponse;
+export type ProductGetAllResponse =
+	| ProductErrorResponse
+	| ProductGetAllSuccessResponse;
 export type ProductGetByIdResponse =
 	| ProductErrorResponse
 	| ProductGetByIdSuccessResponse;
@@ -106,14 +108,14 @@ export interface ProductGetAllQuery {
 }
 
 export interface ProductGetAllQueryParsed {
-    page: number;
-    limit: number;
-    skip?: number | undefined ;
-    take?: number | undefined ;
-    category_id?: number | undefined ;
-    min_price?: number | undefined ;
-    max_price?: number | undefined ;
-    discount: boolean;
+	page: number;
+	limit: number;
+	skip?: number | undefined;
+	take?: number | undefined;
+	category_id?: number | undefined;
+	min_price?: number | undefined;
+	max_price?: number | undefined;
+	discount: boolean;
 }
 
 export interface ProductControllerContract {
@@ -121,14 +123,14 @@ export interface ProductControllerContract {
 		req: Request<object, ProductGetAllResponse, object, ProductGetAllQuery>,
 		res: Response<ProductGetAllResponse>,
 	) => Promise<void>;
-	// getById: (
-	// 	req: Request<{ id: string }, ProductGetByIdResponse>,
-	// 	res: Response<ProductGetByIdResponse>,
-	// ) => Promise<void>;
-	// create: (
-	// 	req: Request<object, ProductCreateResponse, ProductCreateBody>,
-	// 	res: Response<ProductCreateResponse>,
-	// ) => Promise<void>;
+	getById: (
+		req: Request<{ id: string }, ProductGetByIdResponse>,
+		res: Response<ProductGetByIdResponse>,
+	) => Promise<void>;
+	create: (
+		req: Request<object, ProductCreateResponse, ProductCreateBody>,
+		res: Response<ProductCreateResponse>,
+	) => Promise<void>;
 	// fullUpdate: (
 	// 	req: Request<{ id: string }, ProductFullUpdateBody, ProductCreateBody>,
 	// 	res: Response<ProductFullUpdateBody>,
@@ -148,17 +150,25 @@ export interface ProductControllerContract {
 }
 
 export interface ProductServiceContract {
-    getAll: (query: ProductGetAllQueryParsed) =>  Promise<ProductGetAllResponse>;
-    // create: () => Promise<>;
-    // getByID: (id: number) => Promise<>;
-    // fullUpdate: (id: number) => Promise<>;
-    // partialUpdate: (id: number) => Promise<>
-    // delete: (id: number) => Promise<>
+	getAll: (query: ProductGetAllQueryParsed) => Promise<ProductGetAllResponse>;
+	getById: (id: number) => Promise<ProductGetByIdResponse>;
+	create: (query: ProductCreateBody) => Promise<ProductCreateResponse>;
+	// fullUpdate: (id: number) => Promise<>;
+	// partialUpdate: (id: number) => Promise<>
+	// delete: (id: number) => Promise<null>
 }
 
 export interface ProductRepositoryContract {
-    getAll: (skip?: number, take?: number, category_id?: number, min_price?: number, max_price?: number, discount?: boolean) => Promise<Product[]>
-
+	getAll: (
+		skip?: number,
+		take?: number,
+		category_id?: number,
+		min_price?: number,
+		max_price?: number,
+		discount?: boolean,
+	) => Promise<Product[]>;
+	getById: (id: number) => Promise<ProductDetail | null | undefined>;
+	create: (product: ProductCreateBody) => Promise<ProductDetail>;
 }
 
-export type ProductWhereInput = Prisma.ProductWhereInput
+export type ProductWhereInput = Prisma.ProductWhereInput;

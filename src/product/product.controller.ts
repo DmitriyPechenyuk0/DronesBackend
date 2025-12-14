@@ -1,5 +1,8 @@
 import { ProductService } from "./product.service";
-import { ProductControllerContract } from "./product.types";
+import {
+	ProductControllerContract,
+	ProductGetByIdSuccessResponse,
+} from "./product.types";
 
 export const ProductController: ProductControllerContract = {
 	getAll: async (req, res) => {
@@ -75,51 +78,109 @@ export const ProductController: ProductControllerContract = {
 
 			res.status(200).json(products);
 		} catch (error) {
-            console.log(error)
+			console.log(error);
 			res.status(500).json({
 				success: false,
 				message: "Server error",
 			});
 		}
 	},
-	// getById: async (req, res) => {
-	// 	try {
-	// 	} catch (error) {
-	// 		res.status(500).json({
-	// 			success: false,
-	// 			message: "Server error",
-	// 		});
-	// 	}
-	// },
-	// create: async (req, res) => {
-	// 	try {
-	// 	} catch (error) {}
-	// },
-	// fullUpdate: async (req, res) => {
-	// 	// try {
-	// 	// } catch (error) {
-	// 	// 	res.status(500).json({
-	// 	// 		success: false,
-	// 	// 		message: "Server error",
-	// 	// 	});
-	// 	// }
-	// },
-	// partialUpdate: async (req, res) => {
-	// 	try {
-	// 	} catch (error) {
-	// 		res.status(500).json({
-	// 			success: false,
-	// 			message: "Server error",
-	// 		});
-	// 	}
-	// },
-	// delete: async (req, res) => {
-	// 	try {
-	// 	} catch (error) {
-	// 		res.status(500).json({
-	// 			success: false,
-	// 			message: "Server error",
-	// 		});
-	// 	}
-	// },
+	getById: async (req, res) => {
+		try {
+			let parsedId = +req.params.id;
+			let errorMessage = "";
+
+			switch (true) {
+				case isNaN(parsedId) || parsedId < 1:
+					errorMessage = "Invalid id path parameter";
+					break;
+			}
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+			}
+			let product = await ProductService.getById(parsedId);
+
+			res.status(200).json(product);
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({
+				success: false,
+				message: "Server error",
+			});
+		}
+	},
+	create: async (req, res) => {
+		try {
+			let { name, price, discount, category_id, blocks, amount} = req.body;
+			let errorMessage: string | null = null;
+			switch (true) {
+				case typeof name !== "string" || name.length < 3:
+					errorMessage = "Invalid name";
+					break;
+				case typeof price !== "number" || price <= 0:
+					errorMessage = "Invalid price";
+					break;
+				case typeof amount !== "number" || amount < 0:
+					errorMessage = "Invalid amount";
+					break;
+				case typeof discount !== "number" || discount < 0:
+					errorMessage = "Invalid discount";
+					break;
+				case typeof category_id !== "number" ||
+					!Number.isInteger(category_id) ||
+					category_id <= 0:
+					errorMessage = "Invalid category_id";
+					break;
+
+				default:
+					break;
+			}
+
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+			}
+
+			let product = await ProductService.create(req.body);
+			res.status(201).json(product);
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({
+				success: false,
+				message: "Server error",
+			});
+		}
+	},
 };
+// fullUpdate: async (req, res) => {
+// 	try {
+// 	} catch (error) {
+// 		res.status(500).json({
+// 			success: false,
+// 			message: "Server error",
+// 		});
+// 	}
+// },
+// partialUpdate: async (req, res) => {
+// 	try {
+// 	} catch (error) {
+// 		res.status(500).json({
+// 			success: false,
+// 			message: "Server error",
+// 		});
+// 	}
+// },
+// delete: async (req, res) => {
+// 	try {
+// 	} catch (error) {
+// 		res.status(500).json({
+// 			success: false,
+// 			message: "Server error",
+// 		});
+// 	}
+// },
