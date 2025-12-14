@@ -1,4 +1,4 @@
-import { PostService } from "./product.service";
+import { ProductService } from "./product.service";
 import { ProductControllerContract } from "./product.types";
 
 export const ProductController: ProductControllerContract = {
@@ -55,7 +55,7 @@ export const ProductController: ProductControllerContract = {
 					break;
 			}
 			if (errorMessage) {
-				return res.status(400).json({
+				res.status(400).json({
 					success: false,
 					message: errorMessage,
 				});
@@ -73,7 +73,7 @@ export const ProductController: ProductControllerContract = {
 
 			let products = await ProductService.getAll(query);
 
-			return res.status(200).json(products);
+			res.status(200).json(products);
 		} catch (error) {
 			res.status(500).json({
 				success: false,
@@ -81,44 +81,44 @@ export const ProductController: ProductControllerContract = {
 			});
 		}
 	},
-	getById: async (req, res) => {
-		try {
-		} catch (error) {
-			res.status(500).json({
-				success: false,
-				message: "Server error",
-			});
-		}
-	},
-	create: async (req, res) => {
-		try {
-		} catch (error) {}
-	},
-	fullUpdate: async (req, res) => {
-		try {
-		} catch (error) {
-			res.status(500).json({
-				success: false,
-				message: "Server error",
-			});
-		}
-	},
-	partialUpdate: async (req, res) => {
-		try {
-		} catch (error) {
-			res.status(500).json({
-				success: false,
-				message: "Server error",
-			});
-		}
-	},
-	delete: async (req, res) => {
-		try {
-		} catch (error) {
-			res.status(500).json({
-				success: false,
-				message: "Server error",
-			});
-		}
-	},
+	// getById: async (req, res) => {
+	// 	try {
+	// 	} catch (error) {
+	// 		res.status(500).json({
+	// 			success: false,
+	// 			message: "Server error",
+	// 		});
+	// 	}
+	// },
+	// create: async (req, res) => {
+	// 	try {
+	// 	} catch (error) {}
+	// },
+	// fullUpdate: async (req, res) => {
+	// 	// try {
+	// 	// } catch (error) {
+	// 	// 	res.status(500).json({
+	// 	// 		success: false,
+	// 	// 		message: "Server error",
+	// 	// 	});
+	// 	// }
+	// },
+	// partialUpdate: async (req, res) => {
+	// 	try {
+	// 	} catch (error) {
+	// 		res.status(500).json({
+	// 			success: false,
+	// 			message: "Server error",
+	// 		});
+	// 	}
+	// },
+	// delete: async (req, res) => {
+	// 	try {
+	// 	} catch (error) {
+	// 		res.status(500).json({
+	// 			success: false,
+	// 			message: "Server error",
+	// 		});
+	// 	}
+	// },
 };
