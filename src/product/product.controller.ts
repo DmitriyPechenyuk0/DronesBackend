@@ -75,6 +75,7 @@ export const ProductController: ProductControllerContract = {
 
 			res.status(200).json(products);
 		} catch (error) {
+            console.log(error)
 			res.status(500).json({
 				success: false,
 				message: "Server error",

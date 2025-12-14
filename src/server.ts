@@ -1,7 +1,9 @@
 import express from 'express'
+import { ProductRouter } from './product/product.routes'
 
 const app: express.Express = express()
 app.use(express.json())
+app.use(ProductRouter)
 
 const PORT: number = 8000
 const HOST: string = 'localhost'

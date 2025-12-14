@@ -15,6 +15,7 @@ export const ProductService: ProductServiceContract = {
             }
             return response
         } catch (error) {
+            console.log(error)
             let response: ProductErrorResponse = {
                 success: false,
                 message: "Server error"
