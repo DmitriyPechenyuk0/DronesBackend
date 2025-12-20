@@ -756,13 +756,24 @@
 ```json
 {
   "success": true,
-  "data": {
-    "city": "Dnipro",
-    "Streat": "Marshal Malinovsky St.",
-    "house": "114",
-    "apartment": "42",
-    "entrance": "3"
-  }
+  "data": [
+    {
+      "id": 1, 
+      "city": "Dnipro",
+      "street": "Marshal Malinovsky St.",
+      "house": "114",
+      "apartment": "42",
+      "entrance": "3"
+    },
+    {
+      "id": 2,
+      "city": "Kyiv",
+      "street": "Khreshchatyk St.",
+      "house": "1",
+      "apartment": "67",
+      "entrance": 4
+    }
+  ]
 }
 ```
 
@@ -845,9 +856,9 @@
 
 ---
 
-## 7. PULLING users/me/order
+## 7. SHORT POLLING users/me/order
 
-Перегляд статусу замовлення
+Перегляд статусу замовлення, оновленння інформації кожні 1-5 хвилин
 
 ### Response
 
@@ -857,8 +868,10 @@
 {
   "success": true,
   "data": {
-    "status": "onplace"
-  },
+    "order_id": 125,
+    "status": "onplace",
+    "updated_at": "2023-10-27T14:30:00Z"
+  }
 }
 ```
 
@@ -868,5 +881,14 @@
 {
   "success": false,
   "data": {},
+}
+```
+
+**404**
+
+```json
+{
+  "success": false,
+  "message": "Активних замовлень не знайдено"
 }
 ```
