@@ -856,9 +856,9 @@
 
 ---
 
-## 7. SHORT POLLING users/me/order
+## 7. GET users/me/order
 
-Перегляд статусу замовлення, оновленння інформації кожні 1-5 хвилин
+Перегляд статусу замовлення, оновленння інформації кожні 1-5 хвилин, SHORT POLLING запрос
 
 ### Response
 
@@ -868,11 +868,35 @@
 {
   "success": true,
   "data": {
-    "order_id": 125,
-    "status": "onplace",
-    "updated_at": "2023-10-27T14:30:00Z"
+    "user": {
+      "id": "2",
+      "firstname": "Юрія",
+      "lastname": "Павленко",
+      "phone": "+380/99/123/45/68"
+    },
+    "orders": [
+      {
+        "orderId": "30349",
+        "orderDate": "20.04.2023",
+        "trackingNumber": "20030040050000",
+        "deliveryAddress": "Нова Пошта до відділення, Дніпро, Відділення №1: вул. Маршала Малиновського, 114",
+        "paymentMethod": "Накладений платіж",
+        "item": {
+            "id": "1",
+            "name": "DJI Mini 4K",
+            "image": "/shared/img/orders/drones/DjiMini4K.jpg"
+            "quantity": 1,
+        },
+        "summary": {
+          "totalOriginal": 29990,
+          "savings": 1005,
+          "totalToPay": 28985
+        }
+      }
+    ]
   }
 }
+
 ```
 
 **401**
@@ -892,3 +916,115 @@
   "message": "Активних замовлень не знайдено"
 }
 ```
+
+---
+
+## 8. POST /support
+
+сторінка для звертання у підтримку сервісу
+
+### Response
+
+**200**
+
+```json
+{
+  "success": true,
+  "data": {
+        "name": "Іван",
+        "number": "+380/99/116/03/02",
+        "email": "user@example.com",
+        "description": "Потрібна допомога у повертанні замовлення DJI Mini 4K",
+    }
+}
+```
+
+**401**
+
+```json
+{
+  "success": false,
+  "data": {},
+}
+```
+
+---
+
+## 9. PATCH users/me/modification
+
+Оновлення данних поточного користувача
+
+### Body
+
+```json
+{
+    "firstName": "Анастасія",
+    "secoundname": "Павленко",
+    "thirdmame": "Александрівна",
+    "birthDate": "1995-05-20",
+    "phone": "+380991234568",
+    "email": "anastasia.p@example.com"
+}
+```
+
+### Response
+
+**200**
+
+```json
+{
+  "success": true,
+  "message": ""
+}
+```
+
+**400**
+
+```json
+{
+  "success": false,
+  "message": "Invalid email"
+}
+```
+
+---
+
+## 10. PATCH /users/me/addresses/modification
+
+Оновлення данних поточного користувача
+
+### Body
+
+```json
+{
+    "addressId": "123",
+    "city": "Дніпро",
+    "street": "вул. Маршала Малиновського",
+    "houseNumber": "114",
+    "apartment": "12",
+    "entrance": "11",
+    "isDefault": true
+}
+```
+
+### Response
+
+**200**
+
+```json
+{
+  "success": true,
+  "message": ""
+}
+```
+
+**400**
+
+```json
+{
+  "success": false,
+  "message": "Invalid email"
+}
+```
+
+---
