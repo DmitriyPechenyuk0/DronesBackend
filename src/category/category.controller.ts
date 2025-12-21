@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CategoryService } from "./categoryService";
+import { CategoryService } from "./category.servicee";
 
 export class CategoryController {
     const service = new CategoryService();

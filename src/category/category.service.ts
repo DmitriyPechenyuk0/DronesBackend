@@ -1,4 +1,4 @@
-import { CategoryRepository } from "./categoryRepository";
+import { CategoryRepository } from "./category.repository";
 
 export class CategoryService {
     const repository = new CategoryRepository();
