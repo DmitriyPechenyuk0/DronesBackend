@@ -340,93 +340,6 @@
           }
         }
       },
-      "patch": {
-        "tags": ["Products"],
-        "summary": "Часткове оновлення товару",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "example": {
-                "name": "name",
-                "price": 1500,
-                "description": "description",
-                "discount": 10,
-                "category_id": 2,
-                "blocks": [
-                  {
-                    "header": "header",
-                    "description": "description",
-                    "image": "video",
-                    "details": [
-                      {
-                        "characteristic": "characteristic",
-                        "description": "description"
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успішно оновлено",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": true,
-                  "data": {
-                    "name": "Updated name",
-                    "price": 1500,
-                    "description": "Updated description",
-                    "discount": 10,
-                    "category": {
-                      "id": 2,
-                      "name": "thermal"
-                    },
-                    "blocks": [
-                      {
-                        "header": "header",
-                        "description": "description",
-                        "image": "Updated video",
-                        "details": [
-                          {
-                            "characteristic": "Updated characteristic",
-                            "description": "description"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Товар не знайдено",
-            "content": {
-              "application/json": {
-                "example": {
-                  "success": false,
-                  "message": "Product not found"
-                }
-              }
-            }
-          }
-        }
-      },
       "delete": {
         "tags": ["Products"],
         "summary": "Видалити товар",
@@ -595,7 +508,7 @@
                     "secound": "Петров",
                     "thirdname": "Александровіч",
                     "birthdate": "15/01/2001",
-                    "number": "+380/99/116/03/02"
+                    "number": "+380991160302"
                   }
                 }
               }
@@ -760,8 +673,7 @@
     "/users/me/order": {
       "get": {
         "tags": ["Orders"],
-        "summary": "Перегляд статусу замовлення",
-        "description": "SHORT POLLING - оновлення кожні 1-5 хвилин",
+        "summary": "Завантаження усіх замовлень",
         "security": [
           {
             "bearerAuth": []
@@ -775,30 +687,146 @@
                 "example": {
                   "success": true,
                   "data": {
-                    "user": {
-                      "id": "2",
-                      "firstname": "Юрія",
-                      "lastname": "Павленко",
-                      "phone": "+380/99/123/45/68"
-                    },
                     "orders": [
                       {
+                        "name": "",
+                        "secondName": "",
+                        "middleName": "",
                         "orderId": "30349",
                         "orderDate": "20.04.2023",
                         "trackingNumber": "20030040050000",
                         "deliveryAddress": "Нова Пошта до відділення, Дніпро, Відділення №1: вул. Маршала Малиновського, 114",
                         "paymentMethod": "Накладений платіж",
-                        "item": {
-                          "id": "1",
-                          "name": "DJI Mini 4K",
-                          "image": "/shared/img/orders/drones/DjiMini4K.jpg",
-                          "quantity": 1
-                        },
-                        "summary": {
-                          "totalOriginal": 29990,
-                          "savings": 1005,
-                          "totalToPay": 28985
-                        }
+                        "items": [
+                          {
+                            "id": "1",
+                            "name": "DJI Mini 4K",
+                            "image": "/shared/img/orders/drones/DjiMini4K.jpg",
+                            "quantity": 2,
+                            "price": 1002
+                          }
+                        ],
+                        "fullPrice": 29990,
+                        "discount": 1005,
+                        "priceReduced": 12322
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизовано",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "data": {}
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Замовлень не знайдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "Активних замовлень не знайдено"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me/order/cancel": {
+      "post": {
+        "tags": ["Orders"],
+        "summary": "Скасувати замовлення",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "id": "4"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успіх",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": {}
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизовано",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "data": {}
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Замовлень не знайдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "Активних замовлень не знайдено"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+     "/users/me/order-status": {
+      "get": {
+        "tags": ["Orders"],
+        "summary": "Перегляд статусу замовлення",
+        "description": "полінг кожні 40 секунд",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успіх",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": {
+                    "orders": [
+                      {
+                        "trackingNumber": "20030040050000",
+                        "status": "status of the package"
+                      },
+                      {
+                        "trackingNumber": "200300401234128",
+                        "status": "status of the package"
+                      },
+                      {
+                        "trackingNumber": "1234123412343",
+                        "status": "status of the package"
                       }
                     ]
                   }
@@ -860,12 +888,7 @@
               "application/json": {
                 "example": {
                   "success": true,
-                  "data": {
-                    "name": "Іван",
-                    "number": "+380/99/116/03/02",
-                    "email": "user@example.com",
-                    "description": "Потрібна допомога у повертанні замовлення DJI Mini 4K"
-                  }
+                  "data": {}
                 }
               }
             }
@@ -884,7 +907,7 @@
         }
       }
     },
-    "/users/me/modification": {
+    "/users/me/": {
       "patch": {
         "tags": ["Users"],
         "summary": "Оновлення даних користувача",
@@ -941,7 +964,7 @@
         }
       }
     },
-    "/users/me/addresses/modification": {
+    "/users/me/addresses   ": {
       "patch": {
         "tags": ["Users"],
         "summary": "Оновлення адреси",
@@ -960,8 +983,7 @@
                 "street": "вул. Маршала Малиновського",
                 "houseNumber": "114",
                 "apartment": "12",
-                "entrance": "11",
-                "isDefault": true
+                "entrance": "11"
               }
             }
           }
@@ -973,7 +995,14 @@
               "application/json": {
                 "example": {
                   "success": true,
-                  "message": ""
+                  "data": {
+                    "addressId": "123",
+                    "city": "Дніпро",
+                    "street": "вул. Маршала Малиновського",
+                    "houseNumber": "114",
+                    "apartment": "12",
+                    "entrance": "11"
+                  }
                 }
               }
             }
@@ -985,6 +1014,97 @@
                 "example": {
                   "success": false,
                   "message": "Invalid email"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me/addresses  ": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Створення адреси",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "addressId": "123",
+                "city": "Дніпро",
+                "street": "вул. Маршала Малиновського",
+                "houseNumber": "114",
+                "apartment": "12",
+                "entrance": "11"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успішно створено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": {
+                    "addressId": "123",
+                    "city": "Дніпро",
+                    "street": "вул. Маршала Малиновського",
+                    "houseNumber": "114",
+                    "apartment": "12",
+                    "entrance": "11"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Помилка валідації",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "Invalid email"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me/addresses ": {
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Видалення адресси",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "id": "1"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успішно видалено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": {}
                 }
               }
             }
