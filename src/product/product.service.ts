@@ -92,4 +92,33 @@ export const ProductService: ProductServiceContract = {
 			return errorResponse;
 		}
 	},
+	fullUpdate: async (product, id) => {
+		try {
+			const updatedProduct = await ProductRepository.fullUpdate(product, id);
+
+			return updatedProduct;
+		} catch (error) {
+			let errorMessage = "Server Error";
+			console.error("unhandled err: ", error);
+
+			const errorResponse: ProductErrorResponse = {
+				success: false,
+				message: errorMessage,
+			};
+
+			return errorResponse;
+		}
+	},
+	delete: async(id) => {
+		try {
+			let deleted = await ProductRepository.delete(id)
+			return null
+		} catch (error) {
+			console.log(error);
+			return {
+				success: false,
+				message: "Server error",
+			};
+		}
+	},
 };

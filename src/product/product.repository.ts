@@ -1,5 +1,5 @@
 import { PRISMA_CLIENT } from "../config/client";
-import { ProductCreateBody, ProductRepositoryContract } from "./product.types";
+import { ProductCreateBody, ProductDeleteResponse, ProductRepositoryContract } from "./product.types";
 
 function mapBlocksToPrismaCreate(blocks: ProductCreateBody["blocks"]) {
 	return {
@@ -20,7 +20,7 @@ export const ProductRepository: ProductRepositoryContract = {
 	getAll: async (skip, take, category_id, min_price, max_price, discount) => {
 		try {
 			console.log(discount, typeof discount);
-			return PRISMA_CLIENT.product.findMany({
+			return await PRISMA_CLIENT.product.findMany({
 				...(skip !== undefined && { skip }),
 				...(take !== undefined && { take }),
 				where: {
@@ -101,7 +101,78 @@ export const ProductRepository: ProductRepositoryContract = {
 				},
 			});
 		} catch (error) {
+			console.log(error)
 			throw new Error("undefined error");
+		}
+	},
+	fullUpdate: async (query, id) => {
+		try {
+			let { name, price, discount, category_id, blocks, amount } =
+				query;
+
+			const blocksPrismaFormat = mapBlocksToPrismaCreate(blocks);
+
+			const categoryExists = await PRISMA_CLIENT.category.findUnique({
+				where: { id: category_id },
+			});
+
+			if (!categoryExists) {
+				throw new Error(`category not found`);
+			}
+
+			let updatedd = await PRISMA_CLIENT.product.update({
+				where: {id},
+				data: {
+					name,
+					price,
+					discount,
+					amount,
+
+					category: {
+						connect: {
+							id: category_id,
+						},
+					},
+
+					blocks: blocksPrismaFormat,
+				},
+
+				include: {
+					category: true,
+					blocks: {
+						include: {
+							techDetails: true,
+						},
+					},
+				},
+			});
+			return {
+				success: true,
+				data: updatedd
+			}
+		} catch (error) {
+			console.log(error)
+			return {
+				success: false,
+				message: 'Server Error'
+			}
+		}
+	},
+	delete: async(id) => {
+		try {
+			await PRISMA_CLIENT.product.delete({
+				where: {
+					id: id
+				}
+			})
+			return null
+		} catch (error) {
+			console.log(error)
+			let result: ProductDeleteResponse = {
+				success: false,
+				message: 'Server Error'
+			}
+			return result
 		}
 	},
 };

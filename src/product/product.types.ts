@@ -61,6 +61,7 @@ export interface ProductPartialUpdateBody {
 	price?: number;
 	discount?: number;
 	category_id?: number;
+	amount?: number
 	blocks?: {
 		header?: string;
 		description?: string;
@@ -131,10 +132,10 @@ export interface ProductControllerContract {
 		req: Request<object, ProductCreateResponse, ProductCreateBody>,
 		res: Response<ProductCreateResponse>,
 	) => Promise<void>;
-	// fullUpdate: (
-	// 	req: Request<{ id: string }, ProductFullUpdateBody, ProductCreateBody>,
-	// 	res: Response<ProductFullUpdateBody>,
-	// ) => Promise<void>;
+	fullUpdate: (
+		req: Request<{ id: string }, ProductFullUpdateResponse, ProductFullUpdateBody>,
+		res: Response<ProductFullUpdateResponse>,
+	) => Promise<void>;
 	// partialUpdate: (
 	// 	req: Request<
 	// 		{ id: string },
@@ -143,19 +144,19 @@ export interface ProductControllerContract {
 	// 	>,
 	// 	res: Response<ProductPartialUpdateResponse>,
 	// ) => Promise<void>;
-	// delete: (
-	// 	req: Request<object, ProductDeleteResponse, ProductDeleteBody>,
-	// 	res: Response<ProductDeleteResponse>,
-	// ) => Promise<void>;
+	delete: (
+		req: Request<object, ProductDeleteResponse | null, ProductDeleteBody>,
+		res: Response<ProductDeleteResponse | null>,
+	) => Promise<void>;
 }
 
 export interface ProductServiceContract {
 	getAll: (query: ProductGetAllQueryParsed) => Promise<ProductGetAllResponse>;
 	getById: (id: number) => Promise<ProductGetByIdResponse>;
 	create: (query: ProductCreateBody) => Promise<ProductCreateResponse>;
-	// fullUpdate: (id: number) => Promise<>;
-	// partialUpdate: (id: number) => Promise<>
-	// delete: (id: number) => Promise<null>
+	fullUpdate: (query: ProductFullUpdateBody, id: number) => Promise<ProductFullUpdateResponse>;
+	// partialUpdate: (query: ProductPartialUpdateBody,id: number) => Promise<ProductPartialUpdateResponse>
+	delete: (id: number) => Promise< ProductDeleteResponse | null>
 }
 
 export interface ProductRepositoryContract {
@@ -169,6 +170,9 @@ export interface ProductRepositoryContract {
 	) => Promise<Product[]>;
 	getById: (id: number) => Promise<ProductDetail | null | undefined>;
 	create: (product: ProductCreateBody) => Promise<ProductDetail>;
+	fullUpdate: (query: ProductFullUpdateBody, id: number) => Promise<ProductFullUpdateResponse>;
+	// partialUpdate: (query: ProductPartialUpdateBody, id: number) => Promise<ProductPartialUpdateResponse>
+	delete: (id: number) => Promise<ProductDeleteResponse | null>;
 }
 
 export type ProductWhereInput = Prisma.ProductWhereInput;

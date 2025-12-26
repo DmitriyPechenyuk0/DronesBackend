@@ -156,31 +156,84 @@ export const ProductController: ProductControllerContract = {
 			});
 		}
 	},
+	fullUpdate: async (req, res) => {
+		try {
+			let { name, price, discount, category_id, blocks, amount} = req.body;
+			let errorMessage: string | null = null;
+			let parsedId = +req.params.id 
+			switch (true) {
+				case typeof name !== "string" || name.length < 3:
+					errorMessage = "Invalid name";
+					break;
+				case typeof price !== "number" || price <= 0:
+					errorMessage = "Invalid price";
+					break;
+				case typeof amount !== "number" || amount < 0:
+					errorMessage = "Invalid amount";
+					break;
+				case typeof discount !== "number" || discount < 0:
+					errorMessage = "Invalid discount";
+					break;
+				case typeof category_id !== "number" ||
+					!Number.isInteger(category_id) ||
+					category_id <= 0:
+					errorMessage = "Invalid category_id";
+					break;
+				case isNaN(parsedId):
+					errorMessage = "Invalid product id";
+					break;
+
+				default:
+					break;
+			}
+
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+			}
+			
+			let product = await ProductService.fullUpdate(req.body, parsedId);
+			res.status(200).json(product);
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({
+				success: false,
+				message: "Server error",
+			});
+		}
+	},
+	
+	delete: async(req, res) => {
+		try {
+
+			let parsedId = +req.body.id
+			let errorMessage: string | null = null;
+			switch (true) {
+				case isNaN(parsedId) || parsedId < 1:
+					errorMessage = "Invalid id parameter";
+					break;
+				default:
+					break;
+			}
+
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+				return
+			}
+			let result = await ProductService.delete(parsedId);
+			
+			res.status(200).json(result);
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({
+				success: false,
+				message: "Server error",
+			});
+		}
+	},
 };
-// fullUpdate: async (req, res) => {
-// 	try {
-// 	} catch (error) {
-// 		res.status(500).json({
-// 			success: false,
-// 			message: "Server error",
-// 		});
-// 	}
-// },
-// partialUpdate: async (req, res) => {
-// 	try {
-// 	} catch (error) {
-// 		res.status(500).json({
-// 			success: false,
-// 			message: "Server error",
-// 		});
-// 	}
-// },
-// delete: async (req, res) => {
-// 	try {
-// 	} catch (error) {
-// 		res.status(500).json({
-// 			success: false,
-// 			message: "Server error",
-// 		});
-// 	}
-// },
