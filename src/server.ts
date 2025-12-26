@@ -1,7 +1,10 @@
 import express from 'express'
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json';
 
 const app: express.Express = express()
 app.use(express.json())
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT: number = 8000
 const HOST: string = 'localhost'
