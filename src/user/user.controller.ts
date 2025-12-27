@@ -146,4 +146,11 @@ export const UserController: UserControllerContract = {
 			res.status(401).json({ success: false, message: "Unauthorized" });
 		}
 	},
+
+	delete: asunc(req, res) => {
+		try {
+			const authHeader = req.headers.authorization;
+			if (!authHeader) {
+				res.status(401).json({ success: false, message: "Unauthorized" });
+	}
 };
