@@ -8,3 +8,7 @@ const adapter = new PrismaBetterSqlite3({
 export const PRISMA_CLIENT = new PrismaClient({
     adapter
 })
+
+PRISMA_CLIENT.user.findFirst({where: {
+  email
+}})

@@ -1,16 +1,22 @@
-import { UserCreate, UserResponse } from './user.types';
+import { UserRepositoryContract } from "./user.types";
 import { PRISMA_CLIENT } from "../config/client";
 
-export class UserRepository {
-  async findByEmail(email: string): Promise<UserResponse | null> {
-    return null; 
-  }
-
-  async save(userData: UserCreate): Promise<UserResponse> {
-    return {
-      id: "uuid-12345",
-      email: userData.email,
-      name: userData.name
-    };
-  }
+export const UserRepository: UserRepositoryContract = {
+    async createUser(email, password, name) {
+        try {
+            const existingUser = await PRISMA_CLIENT.user.findUnique({
+                where: { email }
+            });
+            if (existingUser) {
+                return 'duplicate';
+            }
+            //const user = await PRISMA_CLIENT.user.create({
+            //    
+            //});
+            return 'created';
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    },
 }
