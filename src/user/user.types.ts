@@ -47,16 +47,31 @@ export interface UserControllerContract {
 
     login: (req: UserLoginBody) => Promise<UserMessageResponse | UserSuccessResponse<UserTokenResponse>>;
 
-    getMe: (userId: number) => Promise<UserMessageResponse | UserSuccessResponse<Omit<User, "password">>>;
+    setNewPassword: (code: string, password: string) => Promise<UserMessageResponse>;
 
-    getAddress: (userId: number) => Promise<UserMessageResponse | UserSuccessResponse<UserAddress>>;
-    
-    requestRecovery: (email: string) => Promise<UserMessageResponse>;
+	getUserInfo: (userId: number) => Promise<UserMessageResponse | UserSuccessResponse<Omit<User, "password">>>;
+
+	getUserAdresses: (userId: number) => Promise<UserMessageResponse | UserSuccessResponse<UserAddress>>;
+
+	updateUserDate: (userId: number, data: Partial<User>) => Promise<UserMessageResponse>;
+
+	updateAddress: (userId: number, data: Partial<UserAddress>) => Promise<UserMessageResponse>;
+
+	createAddress: (userId: number, data: Partial<UserAddress>) => Promise<UserMessageResponse>;
+
+	deleteAddress: (userId: number) => Promise<UserMessageResponse>;
+
+	loadAllOrders: (userId: number) => Promise<UserMessageResponse>;
+
+	cancelOrder: (userId: number, orderId: number) => Promise<UserMessageResponse>;
+
+	support: (userId: number, message: string) => Promise<UserMessageResponse>;
     
     resetPassword: (code: string, password: string) => Promise<UserMessageResponse>;
 
     getOrderStatus: (userId: number) => Promise<UserMessageResponse | UserSuccessResponse<UserOrderStatus>>;
 }
+
 
 export interface UserServiceContract {
 	register: (data: UserRegisterBody) => Promise<UserMessageResponse>;
