@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Send personalized Telegram notifications
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           USER_MAPPING: ${{ secrets.TELEGRAM_USER_MAPPING }}
         run: |
           send_message() {
