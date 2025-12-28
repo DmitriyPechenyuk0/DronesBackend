@@ -1,4 +1,5 @@
 import { UserCreate, UserResponse } from './user.types';
+import { PRISMA_CLIENT } from "../config/client";
 
 export class UserRepository {
   async findByEmail(email: string): Promise<UserResponse | null> {
