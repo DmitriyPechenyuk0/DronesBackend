@@ -1,46 +1,59 @@
 import { UserControllerContract } from "./user.types";
 import { UserService } from "./user.service";
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import { verify } from "jsonwebtoken";
+import {env} from "../config/env";
+import { authMiddleware } from "../middleware/auth.middleware";
 
-const JWT_SECRET = "JWT_SECRET";
+
 
 export const UserController: UserControllerContract = {
-	register: async (req, res) => {
+	register: async (req: Request, res: Response) => {
 		try {
-			const body = req.body;
+			const {email, password, name} = req.body;
 
-			if (!body) {
-				res.status(400).json({ success: false, message: "Validation error" });
-				return;
+			if (!email || typeof email !== 'string') {
+				res.status(400).json({ success: false, message: "Email is required" });
 			}
 
-			const result = await UserService.register(body);
+			if (!password || typeof password !== 'string') {
+				res.status(400).json({ success: false, message: "Password is required" });
+			}
+
+			if (!name || typeof name !== 'string') {
+				res.status(400).json({ success: false, message: "Name is required" });
+			}
+			const result = await UserService.register(email, password, name);
 			res.status(201).json(result);
+
 		} catch (error) {
 			console.log(error);
 			res.status(500).json({ success: false, message: "Server error" });
 		}
 	},
 
-	login: async (req, res) => {
+	login: async (req: Request, res: Response) => {
 		try {
-			const body = req.body;
+			const {email, password} = req.body;
 
-			if (!body) {
-				res.status(400).json({ success: false, message: "Invalid credentials" });
-				return;
+			if (!email || typeof email !== 'string') {
+				res.status(400).json({ success: false, message: "Email is required" });
 			}
 
-			const result = await UserService.login(body);
+			if (!password || typeof password !== 'string') {
+				res.status(400).json({ success: false, message: "Password is required" });
+			}
+
+			const result = await UserService.login(email, password);
 			res.status(200).json(result);
+
 		} catch (error) {
 			console.log(error);
 			res.status(500).json({ success: false, message: "Server error" });
-		}
+		} 
 	},
-	
-	resetPassword: async (req, res) => {
+
+	resetPassword: async (req: Request, res: Response) => {
 		try {
 			const { code } = req.params;
 			const body = req.body;
@@ -58,20 +71,14 @@ export const UserController: UserControllerContract = {
 		}
 	},
 
-	getOrderStatus: async (req, res) => {
+	getOrderStatus: async (req: Request, res: Response) => {
 		try {
-			const authHeader = req.headers.authorization;
+			const userId = res.locals.userId;
 
-			if (!authHeader) {
-				res.status(401).json({ success: false, message: "Unauthorized" });
-				return;
-			}
-
-			const token = authHeader.replace("Bearer ", "");
-			const payload = verify(token, JWT_SECRET) as any;
-
-			const result = await UserService.getOrderStatus(payload.userId);
+			const result = await UserService.getOrderStatus(userId);
+			
 			res.status(200).json(result);
+
 		} catch (error) {
 			console.log(error);
 			res.status(401).json({ success: false, message: "Unauthorized" });
@@ -95,7 +102,7 @@ export const UserController: UserControllerContract = {
 		}
 	},
 
-	getUserInfo: async (_req: Request, res: Response) => {
+	getUserInfo: async (req: Request, res: Response) => {
 		try {
 			const userId = res.locals.userId;
 
@@ -106,7 +113,7 @@ export const UserController: UserControllerContract = {
 		}
 	},
 
-	getUserAdresses: async (_req: Request, res: Response) => {
+	getUserAdresses: async (req: Request, res: Response) => {
 		try {
 			const userId = res.locals.userId;
 
@@ -128,7 +135,7 @@ export const UserController: UserControllerContract = {
 			}
 
 			await UserService.updateUser(userId, data);
-			res.status(200).json({ success: true, message: "user updated" });
+			res.status(200).json({ success: true, data: {} });
 		} catch {
 			res.status(500).json({ success: false, message: "server error" });
 		}
@@ -145,7 +152,7 @@ export const UserController: UserControllerContract = {
 			}
 
 			await UserService.updateAddress(userId, data);
-			res.status(200).json({ success: true, message: "address updated" });
+			res.status(200).json({ success: true, data: {} });
 		} catch {
 			res.status(500).json({ success: false, message: "server error" });
 		}
@@ -162,24 +169,24 @@ export const UserController: UserControllerContract = {
 			}
 
 			await UserService.createAddress(userId, data);
-			res.status(201).json({ success: true, message: "address created" });
+			res.status(201).json({ success: true, data: {} });
 		} catch {
 			res.status(500).json({ success: false, message: "server error" });
 		}
 	},
 
-	deleteAddress: async (_req: Request, res: Response) => {
+	deleteAddress: async (req: Request, res: Response) => {
 		try {
 			const userId = res.locals.userId;
 
 			await UserService.deleteAddress(userId);
-			res.status(200).json({ success: true, message: "address deleted" });
+			res.status(200).json({ success: true, data: {} });
 		} catch {
 			res.status(500).json({ success: false, message: "server error" });
 		}
 	},
 
-	loadAllOrders: async (_req: Request, res: Response) => {
+	loadAllOrders: async (req: Request, res: Response) => {
 		try {
 			const userId = res.locals.userId;
 
@@ -201,7 +208,7 @@ export const UserController: UserControllerContract = {
 			}
 
 			await UserService.cancelOrder(userId, orderId);
-			res.status(200).json({ success: true, message: "order canceled" });
+			res.status(200).json({ success: true, data: {} });
 		} catch {
 			res.status(500).json({ success: false, message: "server error" });
 		}
@@ -218,13 +225,13 @@ export const UserController: UserControllerContract = {
 			}
 
 			await UserService.support(userId, message);
-			res.status(200).json({ success: true, message: "message sent" });
+			res.status(200).json({ success: true, data: {} });
 		} catch {
 			res.status(500).json({ success: false, message: "server error" });
 		}
 	},
 
-	getOrderStatus: async (_req: Request, res: Response) => {
+	getOrderStatus: async (req: Request, res: Response) => {
 		try {
 			const userId = res.locals.userId;
 
