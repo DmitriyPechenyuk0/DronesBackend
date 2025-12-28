@@ -18,8 +18,8 @@ model User {
   username     String    @unique
   email        String    @unique
   phoneNumber  String?
-  name         String?
-  surname      String?
+  name         String
+  surname      String
   middleName   String?
   birthday     DateTime?
   password     String

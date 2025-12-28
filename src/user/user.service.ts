@@ -1,41 +1,3 @@
-/* 
-import { sign, verify } from "jsonwebtoken";
-import { env } from "../config/env";
-
-export const userService: UserServiceContract = {
-  async login(email, password) {
-    const user = await UserRepository.login(email, password);
-
-    if (!user) {
-      return "not found";
-    } else {
-      return sign({ userId: user.id }, env.SECRET_KEY, {
-        expiresIn: "7d",
-      });
-    }
-  },
-  async register(body) {
-    const user = await UserRepository.register(body);
-
-    if (user) {
-      throw new Error("USER_EXISTS");
-    }
-    if (typeof user === "number") {
-      return sign({ userId: user }, env.SECRET_KEY, { expiresIn: "7d" });
-    }
-    return user;
-  },
-  async me(userId) {
-    try {
-      return await UserRepository.me(userId);
-    } catch (error) {
-      console.log(error);
-      return "error";
-    }
-  },
-};
-*/
-
 import bcrypt from "bcryptjs";
 import { sign, verify, JwtPayload, JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { UserRepository } from "./user.repository";
@@ -62,6 +24,9 @@ export const userService: UserContract = {
   async login(email, password) {
     try {
       const user = await UserRepository.getByEmail(email);
+      if (user == null) {
+        return { success: false, message: "Invalid credentials" };
+      }
       let isMatch = bcrypt.compare(password, user.password)
       
       if (!user) {
@@ -104,26 +69,24 @@ export const userService: UserContract = {
   async me(jwt) {
     try {
       let decoded = verifyAndDecodeJwt(jwt)
-      if (decoded !== null){
-        decoded = decoded.userId
-        const userData = await UserRepository.getUserData(decoded)
-        if (!(userData !== null)){
+      if (!decoded || decoded.userId === undefined) {
           return {
-            success: true,
-            data: userData
-          }
-        } else{
+            success: false,
+            message: "invalid JWT"
+          };
+        }
+        const userId: number = decoded.userId;
+        const userData = await UserRepository.getById(userId);
+        if (!userData) {
           return {
             success: false,
             message: "User not found"
-          }
+          };
         }
-      } else{
         return {
-          success: false,
-          message: "invalid JWT"
-        }
-      }
+          success: true,
+          data: userData
+        };
     } catch (error) {
       console.log(error);
       return {
@@ -132,5 +95,4 @@ export const userService: UserContract = {
       }
     }
   },
-  async recovery()
 };

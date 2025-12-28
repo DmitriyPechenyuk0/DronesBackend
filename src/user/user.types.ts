@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import { Prisma } from "../generated/prisma";
 
 export interface UserCreate {
@@ -12,9 +13,9 @@ export type OrderType = Prisma.OrderGetPayload<{
     orderDetails: true
   }
 }>
-export type AddressType = Prisma.AddressGetPayload<{
-}>
+export type AddressType = Prisma.AddressGetPayload<{}>
 export type UserType = Prisma.UserGetPayload<{}>
+export type UserCreateType = Prisma.UserUncheckedCreateInput;
 
 export interface UserErrorResponse {
     success: boolean;
@@ -154,13 +155,14 @@ export interface UserContract {
 
 export interface UserRepositoryContract {
   getOrders(orderId: number): Promise<OrderType | null>;
+  cancelOrder(orderId: number): Promise<null>;
   getAddresses(userId: number): Promise<AddressType[]>;
-  createAddress(userId: number, data: AddressType): Promise<AddressType>;
+  createAddress(data: AddressType): Promise<AddressType | null>;
   deleteAddress(addressId: number): Promise<boolean>;
   updateAddress(addressId: number, data: AddressType): Promise<AddressType>;
   createUser(email: string, password: string, name: string): Promise<'created' | 'duplicate' | null>;
-  getByEmail(email: string): Promise<UserType | null>;
-  updateUser(userId: number, data: UserType): Promise<UserType>;
+  updateUser(data: UserType): Promise<UserType>;
   updateUserPassword(userId: number, password: string): Promise<UserType>;
-  cancelOrder(orderId: number): Promise<null>;
+  getByEmail(email: string): Promise<UserType | null>;
+  getById(userId: number): Promise<UserType | null>;
 }
