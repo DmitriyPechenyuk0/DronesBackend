@@ -3,7 +3,7 @@ import { verify } from "jsonwebtoken";
 import {env} from "../config/env";
 
 
-export function authMiddleware(req: Request, res: Response, next: Function) {
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
     try {
         const authHeader = req.headers.authorization;
     
