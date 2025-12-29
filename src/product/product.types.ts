@@ -61,7 +61,7 @@ export interface ProductPartialUpdateBody {
 	price?: number;
 	discount?: number;
 	category_id?: number;
-	amount?: number
+	amount?: number;
 	blocks?: {
 		header?: string;
 		description?: string;
@@ -133,7 +133,11 @@ export interface ProductControllerContract {
 		res: Response<ProductCreateResponse>,
 	) => Promise<void>;
 	fullUpdate: (
-		req: Request<{ id: string }, ProductFullUpdateResponse, ProductFullUpdateBody>,
+		req: Request<
+			{ id: string },
+			ProductFullUpdateResponse,
+			ProductFullUpdateBody
+		>,
 		res: Response<ProductFullUpdateResponse>,
 	) => Promise<void>;
 	// partialUpdate: (
@@ -154,9 +158,12 @@ export interface ProductServiceContract {
 	getAll: (query: ProductGetAllQueryParsed) => Promise<ProductGetAllResponse>;
 	getById: (id: number) => Promise<ProductGetByIdResponse>;
 	create: (query: ProductCreateBody) => Promise<ProductCreateResponse>;
-	fullUpdate: (query: ProductFullUpdateBody, id: number) => Promise<ProductFullUpdateResponse>;
+	fullUpdate: (
+		query: ProductFullUpdateBody,
+		id: number,
+	) => Promise<ProductFullUpdateResponse>;
 	// partialUpdate: (query: ProductPartialUpdateBody,id: number) => Promise<ProductPartialUpdateResponse>
-	delete: (id: number) => Promise< ProductDeleteResponse | null>
+	delete: (id: number) => Promise<ProductDeleteResponse | null>;
 }
 
 export interface ProductRepositoryContract {
@@ -170,7 +177,10 @@ export interface ProductRepositoryContract {
 	) => Promise<Product[]>;
 	getById: (id: number) => Promise<ProductDetail | null | undefined>;
 	create: (product: ProductCreateBody) => Promise<ProductDetail>;
-	fullUpdate: (query: ProductFullUpdateBody, id: number) => Promise<ProductFullUpdateResponse>;
+	fullUpdate: (
+		query: ProductFullUpdateBody,
+		id: number,
+	) => Promise<ProductFullUpdateResponse>;
 	// partialUpdate: (query: ProductPartialUpdateBody, id: number) => Promise<ProductPartialUpdateResponse>
 	delete: (id: number) => Promise<ProductDeleteResponse | null>;
 }

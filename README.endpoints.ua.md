@@ -1,60 +1,61 @@
-
 # Повна документація API
 
-### Коди помилок 
-* **200** – OK
-* **201** – Створено
-* **400** – Поганий запит
-* **404** – Не знайдено
-* **500** – Внутрішня помилка сервера
+### Коди помилок
+
+- **200** – OK
+- **201** – Створено
+- **400** – Поганий запит
+- **404** – Не знайдено
+- **500** – Внутрішня помилка сервера
 
 # Ендпоінти товарів
 
 ## 1. GET /products
-Отримати список всіх товарів 
+
+Отримати список всіх товарів
+
 ### Response
 
 **200**
 
 ```json
-{ 
-    "success": true,
-    "data": {
-        "products":[
-            {
-                "id": 1,
-                "name": "Drone X1",
-                "price": 1200,
-                "image": "picture",
-                "discount":50,
-                "category": {
-                    "id": 1,
-                    "name": "drone"
-                }
-            },
-            {
-                "id": 2,
-                "name": "Thermal Cam T2",
-                "price": 1500,
-                "image": "picture",
-                "discount":10,
-                "category": {
-                    "id": 2,
-                    "name": "thermal"
-                }
-            }
-        ]  
-    }
+{
+	"success": true,
+	"data": {
+		"products": [
+			{
+				"id": 1,
+				"name": "Drone X1",
+				"price": 1200,
+				"image": "picture",
+				"discount": 50,
+				"category": {
+					"id": 1,
+					"name": "drone"
+				}
+			},
+			{
+				"id": 2,
+				"name": "Thermal Cam T2",
+				"price": 1500,
+				"image": "picture",
+				"discount": 10,
+				"category": {
+					"id": 2,
+					"name": "thermal"
+				}
+			}
+		]
+	}
 }
 ```
-
 
 **500**
 
 ```json
 {
-  "success": false,
-  "message": "Server error"
+	"success": false,
+	"message": "Server error"
 }
 ```
 
@@ -62,7 +63,7 @@
 
 ## 2. GET /products/:id
 
-Отримати один товар за ID 
+Отримати один товар за ID
 
 ### Response
 
@@ -70,39 +71,39 @@
 
 ```json
 {
-    "success": true,
-    "data": {
-        "id": 1,
-        "name": "Drone X1",
-        "price": 1200,
-        "image": "picture",
-        "discount":50,
-        "category": {
-            "id": 1,
-            "name": "drone"
-        },
-        "blocks":[
-            {
-                "id": 1,
-                "header": "header",
-                "description":"description",
-                "image": "picture"
-            },
-            {
-                "id": 2,
-                "header": "header",
-                "description":"description",
-                "image": "video",
-                "details":[
-                    {
-                        "id":1,
-                        "characteristic":"characteristic",
-                        "description":"description"
-                    }
-                ]
-            }
-        ] 
-    } 
+	"success": true,
+	"data": {
+		"id": 1,
+		"name": "Drone X1",
+		"price": 1200,
+		"image": "picture",
+		"discount": 50,
+		"category": {
+			"id": 1,
+			"name": "drone"
+		},
+		"blocks": [
+			{
+				"id": 1,
+				"header": "header",
+				"description": "description",
+				"image": "picture"
+			},
+			{
+				"id": 2,
+				"header": "header",
+				"description": "description",
+				"image": "video",
+				"details": [
+					{
+						"id": 1,
+						"characteristic": "characteristic",
+						"description": "description"
+					}
+				]
+			}
+		]
+	}
 }
 ```
 
@@ -110,8 +111,8 @@
 
 ```json
 {
-  "success": false,
-  "message": "Product not found"
+	"success": false,
+	"message": "Product not found"
 }
 ```
 
@@ -119,8 +120,8 @@
 
 ```json
 {
-  "success": false,
-  "message": "Server error"
+	"success": false,
+	"message": "Server error"
 }
 ```
 
@@ -128,30 +129,30 @@
 
 ## 3. POST /products
 
-Створити новий товар 
+Створити новий товар
 
 ### Body
 
 ```json
 {
-    "name": "Drone X5",
-    "price": 1400,
-    "description": "New model",
-    "discount": 50,
-    "category_id": 1,
-    "blocks": [
-        {
-            "header": "header",
-            "description": "description",
-            "image": "picture",
-            "details": [
-                {
-                "characteristic": "characteristic",
-                "description": "description"
-                }
-            ]
-        }
-    ]
+	"name": "Drone X5",
+	"price": 1400,
+	"description": "New model",
+	"discount": 50,
+	"category_id": 1,
+	"blocks": [
+		{
+			"header": "header",
+			"description": "description",
+			"image": "picture",
+			"details": [
+				{
+					"characteristic": "characteristic",
+					"description": "description"
+				}
+			]
+		}
+	]
 }
 ```
 
@@ -161,31 +162,31 @@
 
 ```json
 {
-    "success": true,
-    "data": {
-        "id": 5,
-        "name": "new name",
-        "price": 1400,
-        "description": "New description",
-        "discount": 50,
-        "category": {
-            "id": 1,
-            "name": "drone"
-        },
-        "blocks": [
-            {
-                "header": "new header",
-                "description": "new description",
-                "image": "new picture",
-                "details": [
-                    {
-                    "characteristic": "new characteristic",
-                    "description": "new description"
-                    }
-                ]
-            }
-        ]
-    }
+	"success": true,
+	"data": {
+		"id": 5,
+		"name": "new name",
+		"price": 1400,
+		"description": "New description",
+		"discount": 50,
+		"category": {
+			"id": 1,
+			"name": "drone"
+		},
+		"blocks": [
+			{
+				"header": "new header",
+				"description": "new description",
+				"image": "new picture",
+				"details": [
+					{
+						"characteristic": "new characteristic",
+						"description": "new description"
+					}
+				]
+			}
+		]
+	}
 }
 ```
 
@@ -193,8 +194,8 @@
 
 ```json
 {
-    "success": false,
-    "message": "Validation error"
+	"success": false,
+	"message": "Validation error"
 }
 ```
 
@@ -202,8 +203,8 @@
 
 ```json
 {
-  "success": false,
-  "message": "Server error"
+	"success": false,
+	"message": "Server error"
 }
 ```
 
@@ -217,24 +218,24 @@
 
 ```json
 {
-    "name": "Drone X1",
-    "price": 1200,
-    "image": "picture",
-    "discount":50,
-    "category_id": 1,
-    "blocks":[
-        {
-            "header": "header",
-            "description":"description",
-            "image": "video",
-            "details":[
-                {
-                    "characteristic":"characteristic",
-                    "description":"description"
-                }
-            ]
-        }
-    ]
+	"name": "Drone X1",
+	"price": 1200,
+	"image": "picture",
+	"discount": 50,
+	"category_id": 1,
+	"blocks": [
+		{
+			"header": "header",
+			"description": "description",
+			"image": "video",
+			"details": [
+				{
+					"characteristic": "characteristic",
+					"description": "description"
+				}
+			]
+		}
+	]
 }
 ```
 
@@ -244,30 +245,30 @@
 
 ```json
 {
-    "success": true,
-    "data": {
-        "name": "Updated name",
-        "price": 1500,
-        "description": "Updated description",
-        "discount": 10,
-        "category": {
-            "id": 1,
-            "name": "drone"
-        },
-        "blocks": [
-            {
-                "header": "Updated header",
-                "description": "Updated description",
-                "image": "Updated video",
-                "details": [
-                    {
-                      "characteristic": "Updated characteristic",
-                      "description":  "Updated description"
-                    }
-                ]
-            }
-        ]
-    }
+	"success": true,
+	"data": {
+		"name": "Updated name",
+		"price": 1500,
+		"description": "Updated description",
+		"discount": 10,
+		"category": {
+			"id": 1,
+			"name": "drone"
+		},
+		"blocks": [
+			{
+				"header": "Updated header",
+				"description": "Updated description",
+				"image": "Updated video",
+				"details": [
+					{
+						"characteristic": "Updated characteristic",
+						"description": "Updated description"
+					}
+				]
+			}
+		]
+	}
 }
 ```
 
@@ -275,8 +276,8 @@
 
 ```json
 {
-  "success": false,
-  "message": "Product not found"
+	"success": false,
+	"message": "Product not found"
 }
 ```
 
@@ -290,24 +291,24 @@
 
 ```json
 {
-    "name": "name",
-    "price": 1500,
-    "description": "description",
-    "discount": 10,
-    "category_id": 2,
-    "blocks": [
-        {
-            "header": "header",
-            "description": "description",
-            "image": "video",
-            "details": [
-                {
-                  "characteristic": "characteristic",
-                  "description":  "description"
-                }
-            ]
-        }
-    ]
+	"name": "name",
+	"price": 1500,
+	"description": "description",
+	"discount": 10,
+	"category_id": 2,
+	"blocks": [
+		{
+			"header": "header",
+			"description": "description",
+			"image": "video",
+			"details": [
+				{
+					"characteristic": "characteristic",
+					"description": "description"
+				}
+			]
+		}
+	]
 }
 ```
 
@@ -317,30 +318,30 @@
 
 ```json
 {
-    "success": true,
-    "data": {
-        "name": "Updated name",
-        "price": 1500,
-        "description": "Updated description",
-        "discount": 10,
-        "category": {
-            "id": 2,
-            "name": "thermal"
-        },
-        "blocks": [
-            {
-                "header": "header",
-                "description": "description",
-                "image": "Updated video",
-                "details": [
-                    {
-                      "characteristic": "Updated characteristic",
-                      "description":  "description"
-                    }
-                ]
-            }
-        ]
-    }
+	"success": true,
+	"data": {
+		"name": "Updated name",
+		"price": 1500,
+		"description": "Updated description",
+		"discount": 10,
+		"category": {
+			"id": 2,
+			"name": "thermal"
+		},
+		"blocks": [
+			{
+				"header": "header",
+				"description": "description",
+				"image": "Updated video",
+				"details": [
+					{
+						"characteristic": "Updated characteristic",
+						"description": "description"
+					}
+				]
+			}
+		]
+	}
 }
 ```
 
@@ -348,8 +349,8 @@
 
 ```json
 {
-  "success": false,
-  "message": "Product not found"
+	"success": false,
+	"message": "Product not found"
 }
 ```
 
@@ -357,13 +358,13 @@
 
 ## 6. DELETE /products/:id
 
-Видалити товар 
+Видалити товар
 
 ### Body
 
 ```json
 {
-    "id": 1
+	"id": 1
 }
 ```
 
@@ -373,8 +374,8 @@
 
 ```json
 {
-  "success": true,
-  "data": null
+	"success": true,
+	"data": null
 }
 ```
 
@@ -382,8 +383,8 @@
 
 ```json
 {
-  "success": false,
-  "message": "Product not found"
+	"success": false,
+	"message": "Product not found"
 }
 ```
 
@@ -391,15 +392,16 @@
 
 ```json
 {
-  "success": false,
-  "message": "Server error"
+	"success": false,
+	"message": "Server error"
 }
 ```
 
 # Ендпоінти категорій
 
 ## 1. GET /categories
-Отримати список всіх категорій 
+
+Отримати список всіх категорій
 
 ### Response
 
@@ -407,19 +409,19 @@
 
 ```json
 {
-    "success": true,
-    "data": {
-            "categories":[
-            {
-                "id": 1,
-                "name": "drone"
-            },
-            {
-                "id": 2,
-                "name": "thermal"
-            }
-        ]
-    }
+	"success": true,
+	"data": {
+		"categories": [
+			{
+				"id": 1,
+				"name": "drone"
+			},
+			{
+				"id": 2,
+				"name": "thermal"
+			}
+		]
+	}
 }
 ```
 
@@ -427,15 +429,16 @@
 
 ```json
 {
-    "success": false,
-    "message": "Server error"
+	"success": false,
+	"message": "Server error"
 }
 ```
 
 ---
 
 ## 2. GET /categories/:id
-Отримати категорію за ID 
+
+Отримати категорію за ID
 
 ### Response
 
@@ -443,11 +446,11 @@
 
 ```json
 {
-    "success": true,
-    "data": {
-        "id": 1,
-        "name": "drone"
-    }
+	"success": true,
+	"data": {
+		"id": 1,
+		"name": "drone"
+	}
 }
 ```
 
@@ -455,8 +458,8 @@
 
 ```json
 {
-    "success": false,
-    "message": "Category not found"
+	"success": false,
+	"message": "Category not found"
 }
 ```
 
@@ -464,30 +467,31 @@
 
 ```json
 {
-    "success": false,
-    "message": "Server error"
+	"success": false,
+	"message": "Server error"
 }
 ```
 
 ---
 
 ## 3. POST /categories
-Створити категорію 
+
+Створити категорію
 
 ### Body
 
 ```json
 {
-    "categories":[
-        {
-            "id": 1,
-            "name": "drone"
-        },
-        {
-            "id": 2,
-            "name": "thermal"
-        }
-    ]
+	"categories": [
+		{
+			"id": 1,
+			"name": "drone"
+		},
+		{
+			"id": 2,
+			"name": "thermal"
+		}
+	]
 }
 ```
 
@@ -497,19 +501,19 @@
 
 ```json
 {
-  "success": true,
-  "data": {
-    "categories":[
-        {
-            "id": 1,
-            "name": "new drone"
-        },
-        {
-            "id": 2,
-            "name": "new thermal"
-        }
-    ]
-  }
+	"success": true,
+	"data": {
+		"categories": [
+			{
+				"id": 1,
+				"name": "new drone"
+			},
+			{
+				"id": 2,
+				"name": "new thermal"
+			}
+		]
+	}
 }
 ```
 
@@ -517,8 +521,8 @@
 
 ```json
 {
-  "success": false,
-  "message": "Validation error"
+	"success": false,
+	"message": "Validation error"
 }
 ```
 
@@ -526,30 +530,31 @@
 
 ```json
 {
-  "success": false,
-  "message": "Server error"
+	"success": false,
+	"message": "Server error"
 }
 ```
 
 ---
 
 ## 4. PUT /categories/:id
-Оновити категорію 
+
+Оновити категорію
 
 ### Body
 
 ```json
 {
-"categories":[
-        {
-            "id": 1,
-            "name": "drone"
-        },
-        {
-            "id": 2,
-            "name": "thermal"
-        }
-    ]
+	"categories": [
+		{
+			"id": 1,
+			"name": "drone"
+		},
+		{
+			"id": 2,
+			"name": "thermal"
+		}
+	]
 }
 ```
 
@@ -559,19 +564,19 @@
 
 ```json
 {
-    "success": true,
-    "data": {
-        "categories":[
-            {
-                "id": 1,
-                "name": "Updated drone"
-            },
-            {
-                "id": 2,
-                "name": "Updated thermal"
-            }
-        ]
-    }
+	"success": true,
+	"data": {
+		"categories": [
+			{
+				"id": 1,
+				"name": "Updated drone"
+			},
+			{
+				"id": 2,
+				"name": "Updated thermal"
+			}
+		]
+	}
 }
 ```
 
@@ -579,8 +584,8 @@
 
 ```json
 {
-  "success": false,
-  "message": "Category not found"
+	"success": false,
+	"message": "Category not found"
 }
 ```
 
@@ -588,21 +593,22 @@
 
 ```json
 {
-  "success": false,
-  "message": "Server error"
+	"success": false,
+	"message": "Server error"
 }
 ```
 
 ---
 
 ## 5. DELETE /categories/:id
-Видалити категорію 
+
+Видалити категорію
 
 ### Body
 
 ```json
 {
-  "id": 1
+	"id": 1
 }
 ```
 
@@ -612,8 +618,8 @@
 
 ```json
 {
-  "success": true,
-  "data": null
+	"success": true,
+	"data": null
 }
 ```
 
@@ -621,8 +627,8 @@
 
 ```json
 {
-  "success": false,
-  "message": "Category not found"
+	"success": false,
+	"message": "Category not found"
 }
 ```
 
@@ -630,7 +636,7 @@
 
 ```json
 {
-  "success": false,
-  "message": "Server error"
+	"success": false,
+	"message": "Server error"
 }
 ```

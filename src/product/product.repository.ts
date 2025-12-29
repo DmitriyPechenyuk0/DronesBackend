@@ -1,5 +1,9 @@
 import { PRISMA_CLIENT } from "../config/client";
-import { ProductCreateBody, ProductDeleteResponse, ProductRepositoryContract } from "./product.types";
+import {
+	ProductCreateBody,
+	ProductDeleteResponse,
+	ProductRepositoryContract,
+} from "./product.types";
 
 function mapBlocksToPrismaCreate(blocks: ProductCreateBody["blocks"]) {
 	return {
@@ -101,14 +105,13 @@ export const ProductRepository: ProductRepositoryContract = {
 				},
 			});
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 			throw new Error("undefined error");
 		}
 	},
 	fullUpdate: async (query, id) => {
 		try {
-			let { name, price, discount, category_id, blocks, amount } =
-				query;
+			let { name, price, discount, category_id, blocks, amount } = query;
 
 			const blocksPrismaFormat = mapBlocksToPrismaCreate(blocks);
 
@@ -121,7 +124,7 @@ export const ProductRepository: ProductRepositoryContract = {
 			}
 
 			let updatedd = await PRISMA_CLIENT.product.update({
-				where: {id},
+				where: { id },
 				data: {
 					name,
 					price,
@@ -148,31 +151,31 @@ export const ProductRepository: ProductRepositoryContract = {
 			});
 			return {
 				success: true,
-				data: updatedd
-			}
+				data: updatedd,
+			};
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 			return {
 				success: false,
-				message: 'Server Error'
-			}
+				message: "Server Error",
+			};
 		}
 	},
-	delete: async(id) => {
+	delete: async (id) => {
 		try {
 			await PRISMA_CLIENT.product.delete({
 				where: {
-					id: id
-				}
-			})
-			return null
+					id: id,
+				},
+			});
+			return null;
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 			let result: ProductDeleteResponse = {
 				success: false,
-				message: 'Server Error'
-			}
-			return result
+				message: "Server Error",
+			};
+			return result;
 		}
 	},
 };

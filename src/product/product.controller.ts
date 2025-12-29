@@ -114,7 +114,8 @@ export const ProductController: ProductControllerContract = {
 	},
 	create: async (req, res) => {
 		try {
-			let { name, price, discount, category_id, blocks, amount} = req.body;
+			let { name, price, discount, category_id, blocks, amount } =
+				req.body;
 			let errorMessage: string | null = null;
 			switch (true) {
 				case typeof name !== "string" || name.length < 3:
@@ -158,9 +159,10 @@ export const ProductController: ProductControllerContract = {
 	},
 	fullUpdate: async (req, res) => {
 		try {
-			let { name, price, discount, category_id, blocks, amount} = req.body;
+			let { name, price, discount, category_id, blocks, amount } =
+				req.body;
 			let errorMessage: string | null = null;
-			let parsedId = +req.params.id 
+			let parsedId = +req.params.id;
 			switch (true) {
 				case typeof name !== "string" || name.length < 3:
 					errorMessage = "Invalid name";
@@ -193,7 +195,7 @@ export const ProductController: ProductControllerContract = {
 					message: errorMessage,
 				});
 			}
-			
+
 			let product = await ProductService.fullUpdate(req.body, parsedId);
 			res.status(200).json(product);
 		} catch (error) {
@@ -204,11 +206,10 @@ export const ProductController: ProductControllerContract = {
 			});
 		}
 	},
-	
-	delete: async(req, res) => {
-		try {
 
-			let parsedId = +req.body.id
+	delete: async (req, res) => {
+		try {
+			let parsedId = +req.body.id;
 			let errorMessage: string | null = null;
 			switch (true) {
 				case isNaN(parsedId) || parsedId < 1:
@@ -223,10 +224,10 @@ export const ProductController: ProductControllerContract = {
 					success: false,
 					message: errorMessage,
 				});
-				return
+				return;
 			}
 			let result = await ProductService.delete(parsedId);
-			
+
 			res.status(200).json(result);
 		} catch (error) {
 			console.log(error);

@@ -94,7 +94,10 @@ export const ProductService: ProductServiceContract = {
 	},
 	fullUpdate: async (product, id) => {
 		try {
-			const updatedProduct = await ProductRepository.fullUpdate(product, id);
+			const updatedProduct = await ProductRepository.fullUpdate(
+				product,
+				id,
+			);
 
 			return updatedProduct;
 		} catch (error) {
@@ -109,10 +112,10 @@ export const ProductService: ProductServiceContract = {
 			return errorResponse;
 		}
 	},
-	delete: async(id) => {
+	delete: async (id) => {
 		try {
-			let deleted = await ProductRepository.delete(id)
-			return null
+			let deleted = await ProductRepository.delete(id);
+			return null;
 		} catch (error) {
 			console.log(error);
 			return {
