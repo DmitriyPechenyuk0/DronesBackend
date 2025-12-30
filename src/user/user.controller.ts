@@ -90,15 +90,94 @@ export const UserController: UserControllerContract = {
             })
         }
     },
-    // login: async(req, res) => {
-    //     try {
-            
-    //     } catch (error) {
-    //         console.log(error)
-    //         return {
-    //             success: false,
+    login: async(req, res) => {
+        try {
+            let { password, email } = req.body
+            let errorMessage: string | null = null;
+			switch (true) {
+				case typeof password !== "string":
+					errorMessage = "Invalid password";
+					break;
+				case typeof email !== "string":
+					errorMessage = "Invalid email";
+					break;
+                case email.length === 0:
+                    errorMessage = "Email cannot be empty";
+                    break;
+                case !email.includes('@'):
+                    errorMessage = "Email must contain @";
+                    break;
+                case email.indexOf('@') === 0:
+                    errorMessage = "Email cannot start with @";
+                    break;
+                case email.indexOf('@') === email.length - 1:
+                    errorMessage = "Email cannot end with @";
+                    break;
+                case !email.includes('.'):
+                    errorMessage = "Email must contain a domain";
+                    break;
 
-    //         }
-    //     }
-    // },
+				default:
+					break;
+			}
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+			}
+            const login = await userService.login(email, password)
+
+            res.json(login)
+        } catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+    recovery: async (req, res) => {
+        try {
+            let { email } = req.body
+            let errorMessage: string | null = null;
+			switch (true) {
+				case typeof email !== "string":
+					errorMessage = "Invalid email";
+					break;
+                case email.length === 0:
+                    errorMessage = "Email cannot be empty";
+                    break;
+                case !email.includes('@'):
+                    errorMessage = "Email must contain @";
+                    break;
+                case email.indexOf('@') === 0:
+                    errorMessage = "Email cannot start with @";
+                    break;
+                case email.indexOf('@') === email.length - 1:
+                    errorMessage = "Email cannot end with @";
+                    break;
+                case !email.includes('.'):
+                    errorMessage = "Email must contain a domain";
+                    break;
+
+				default:
+					break;
+			}
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+			}
+            const recovery = await userService.recovery(email)
+            return recovery 
+        } catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
 };

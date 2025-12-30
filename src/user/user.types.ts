@@ -29,14 +29,14 @@ export interface UserSuccessResponse {
 }
 
 export interface UserLoginSuccessResponse {
-	success: boolean;
+	success: true
 	data: {
 		jwt: string;
 	};
 }
 
 export interface UserMeSuccessResponse {
-	success: boolean;
+	success: true;
 	data: {
 		id: number;
 		email: string;
@@ -49,7 +49,7 @@ export interface UserMeSuccessResponse {
 }
 
 export interface UserAddressesSuccessResponse {
-	success: boolean;
+	success: true;
 	data: {
 		id: number;
 		city: string;
@@ -79,7 +79,7 @@ export interface UserAddressesPatch {
 }
 
 export interface UserAddressesPatchSuccessResponse {
-	success: boolean;
+	success: true;
 	data: {
 		id: number;
 		city: string;
@@ -91,7 +91,7 @@ export interface UserAddressesPatchSuccessResponse {
 }
 
 export interface UserOrderSuccessResponse {
-	success: boolean;
+	success: true;
 	data: {
 		orders: {
 			name: string;
@@ -117,7 +117,7 @@ export interface UserOrderSuccessResponse {
 }
 
 export interface UserOrderStatusSuccessResponse {
-	success: boolean;
+	success: true;
 	data: {
 		orders: {
 			trackingNumber: number;
@@ -137,11 +137,11 @@ export interface UserServiceContract {
 	register(
 		userData: UserCreate,
 	): Promise<UserSuccessResponse | UserErrorResponse>;
-	// login(
-	// 	email: string,
-	// 	password: string,
-	// ): Promise<UserErrorResponse | UserLoginSuccessResponse>;
-	// recovery(email: string): Promise<UserSuccessResponse | UserErrorResponse>;
+	login(
+		email: string,
+		password: string,
+	): Promise<UserErrorResponse | UserLoginSuccessResponse>;
+	recovery(email: string): Promise<UserSuccessResponse | UserErrorResponse>;
 	// recoveryCode(
 	// 	code: string,
 	// 	password: string,
@@ -195,6 +195,8 @@ export interface UserRepositoryContract {
 	updateUserPassword(userId: number, password: string): Promise<UserType>;
 	getByEmail(email: string): Promise<UserType | null>;
 	getById(userId: number): Promise<UserType | null>;
+	userSetRecovery(email: string, code: string): Promise<string>
+	userClearRecovery(email: string): Promise<string>
 }
 
 interface ControllerSupportBody {
@@ -202,6 +204,10 @@ interface ControllerSupportBody {
 	number: string
 	email: string
 	description: string
+}
+interface ControllerLoginBody {
+	email: string
+	password: string
 }
 interface ControllerRegisterBody {
 	name: string
@@ -216,11 +222,17 @@ interface ControllerErrorResponse {
 	success: false,
 	message: string
 }
+interface ControllerRecoveryBody{
+	email: string
+}
+interface ControllerRecoveryCodeBody{
+	password: string
+}
 export interface UserControllerContract {
 	register: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerRegisterBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
-	// login: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
-	// recovery: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
-	// recoveryCode: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	login: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerLoginBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	recovery: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerRecoveryBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	recoveryCode: (req: Request<{code: string}, ControllerSuccessResponse | ControllerErrorResponse, ControllerRecoveryCodeBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 	support: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 
 }

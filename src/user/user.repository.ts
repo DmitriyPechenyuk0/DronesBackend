@@ -157,4 +157,21 @@ export const UserRepository: UserRepositoryContract = {
 			return null;
 		}
 	},
+	userSetRecovery: async (email, code) => {
+		try {
+			await PRISMA_CLIENT.user.update({
+				where: {
+					email,
+				},
+				data: {
+					recoveryCode: code,
+				}
+			})
+			return "success"
+		} catch (error) {
+			console.error(error);
+			return "error";
+		}
+		
+	},
 };

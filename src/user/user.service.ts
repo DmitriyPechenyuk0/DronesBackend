@@ -28,31 +28,31 @@ export function verifyAndDecodeJwt(token: string): JwtPayload | null {
 }
 
 export const userService: UserServiceContract = {
-	// async login(email, password) {
-	// 	try {
-	// 		const user = await UserRepository.getByEmail(email);
-	// 		if (user == null) {
-	// 			return { success: false, message: "Invalid credentials" };
-	// 		}
-	// 		let isMatch = bcrypt.compare(password, user.password);
+	async login(email, password) {
+		try {
+			const user = await UserRepository.getByEmail(email);
+			if (user == null) {
+				return { success: false, message: "Invalid credentials" };
+			}
+			let isMatch = await bcrypt.compare(password, user.password);
 
-	// 		if (!user) {
-	// 			return { success: false, message: "Invalid credentials" };
-	// 		} else {
-	// 			return {
-	// 				success: true,
-	// 				data: {
-	// 					jwt: sign({ userId: user.id }, env.SECRET_KEY, {
-	// 						expiresIn: "7d",
-	// 					}),
-	// 				},
-	// 			};
-	// 		}
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return { success: false, message: "Unhandled error" };
-	// 	}
-	// },
+			if (!isMatch) {
+				return { success: false, message: "Invalid credentials" };
+			}
+			return {
+				success: true,
+				data: {
+					jwt: sign({ userId: user.id }, env.SECRET_KEY, {
+						expiresIn: "7d",
+					}),
+				},
+			};
+			
+		} catch (error) {
+			console.log(error);
+			return { success: false, message: "Unhandled error" };
+		}
+	},
 	async register(body) {
 		const { password, email, name } = body;
 		try {
@@ -141,6 +141,29 @@ export const userService: UserServiceContract = {
 			return {
 				success: true,
 				data: {}
+			}
+		} catch (error) {
+			console.log("error")
+			return {
+				success: false,
+				message: "Unhandled error"
+			}
+		}
+	},
+	recovery: async(email) => {
+		try {
+			const response = await UserRepository.userSetRecovery(email)
+			if (response === 'success'){
+				return {
+					success: true,
+					data: {}
+				}
+			}
+			if (response === 'error'){
+				return {
+					success: true,
+					message: "Unhandled Error"
+				}
 			}
 		} catch (error) {
 			console.log("error")
