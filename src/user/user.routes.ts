@@ -2,9 +2,9 @@ import { Router } from "express";
 import { UserController } from "./user.controller";
 import { authMiddleware } from "../middlewares";
 
-const UserRouter = Router();
+export const UserRouter = Router();
 
-// UserRouter.post("users/register", UserController.register);
+UserRouter.post("/users/register", UserController.register);
 // UserRouter.post("users/login", UserController.login);
 // UserRouter.patch("users/recovery", UserController.resetPassword);
 // UserRouter.patch("users/recovery/:code", UserController.setNewPassword);
@@ -45,4 +45,4 @@ const UserRouter = Router();
 // );
 UserRouter.post("/support", UserController.support);
 
-export default UserRouter;
+

@@ -19,12 +19,12 @@ export type UserType = Prisma.UserGetPayload<{}>;
 export type UserCreateType = Prisma.UserUncheckedCreateInput;
 
 export interface UserErrorResponse {
-	success: boolean;
+	success: false;
 	message: string;
 }
 
 export interface UserSuccessResponse {
-	success: boolean;
+	success: true;
 	data: {};
 }
 
@@ -133,10 +133,10 @@ export interface Support {
 	description: string;
 }
 
-export interface UserContract {
-	// register(
-	// 	userData: UserCreate,
-	// ): Promise<UserSuccessResponse | UserErrorResponse>;
+export interface UserServiceContract {
+	register(
+		userData: UserCreate,
+	): Promise<UserSuccessResponse | UserErrorResponse>;
 	// login(
 	// 	email: string,
 	// 	password: string,
@@ -218,9 +218,9 @@ interface ControllerErrorResponse {
 }
 export interface UserControllerContract {
 	register: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerRegisterBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
-	login: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
-	recovery: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
-	recoveryCode: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	// login: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	// recovery: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	// recoveryCode: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 	support: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 
 }

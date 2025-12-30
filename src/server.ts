@@ -1,7 +1,7 @@
 import express from "express";
 import { ProductRouter } from "./product/product.routes";
 import { CategoryRouter } from "./category/category.routes";
-import UserRouter from './user/user.routes'
+import { UserRouter } from './user/user.routes'
 
 const app: express.Express = express();
 app.use(express.json());

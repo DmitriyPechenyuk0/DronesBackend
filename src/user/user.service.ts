@@ -7,7 +7,7 @@ import {
 	TokenExpiredError,
 } from "jsonwebtoken";
 import { UserRepository } from "./user.repository";
-import { UserContract } from "./user.types";
+import { UserServiceContract } from "./user.types";
 import { env } from "../config/env";
 import { transporter } from "../config";
 
@@ -27,7 +27,7 @@ export function verifyAndDecodeJwt(token: string): JwtPayload | null {
 	}
 }
 
-export const userService: UserContract = {
+export const userService: UserServiceContract = {
 	// async login(email, password) {
 	// 	try {
 	// 		const user = await UserRepository.getByEmail(email);
@@ -53,24 +53,27 @@ export const userService: UserContract = {
 	// 		return { success: false, message: "Unhandled error" };
 	// 	}
 	// },
-	// async register(body) {
-	// 	const { password, email, name } = body;
-	// 	try {
-	// 		const user = await UserRepository.createUser(email, password, name);
-	// 		if (!user) {
-	// 			return { success: false, message: "" };
-	// 		}
-	// 		if (user === "created") {
-	// 			return { success: true, data: {} };
-	// 		} else if (user === "duplicate") {
-	// 			return { success: false, message: "Integrity error" };
-	// 		}
-	// 		return { success: false, message: "Unhandled error" };
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return { success: false, message: "Unhandled error" };
-	// 	}
-	// },
+	async register(body) {
+		const { password, email, name } = body;
+		try {
+			const cryptedPassword = await bcrypt.hash(password, 12)
+			const user = await UserRepository.createUser(email, cryptedPassword, name);
+			console.log(user)
+			if (!user) {
+				return { success: false, message: "" };
+			}
+			if (user === "created") {
+				return { success: true, data: {} };
+			}
+			if (user === "duplicate") {
+				return { success: false, message: "Integrity error" };
+			}
+			return { success: false, message: "Unhandled error" };
+		} catch (error) {
+			console.log(error);
+			return { success: false, message: "Unhandled error" };
+		}
+	},
 	// async me(jwt) {
 	// 	try {
 	// 		let decoded = verifyAndDecodeJwt(jwt);

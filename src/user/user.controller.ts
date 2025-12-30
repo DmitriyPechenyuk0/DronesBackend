@@ -57,9 +57,48 @@ export const UserController: UserControllerContract = {
     },
     register: async(req, res) => {
         try {
-            let { password, email, } = req.body
+            let { password, email, name } = req.body
+            let errorMessage: string | null = null;
+			switch (true) {
+				case typeof password !== "string":
+					errorMessage = "Invalid password";
+					break;
+				case typeof email !== "string":
+					errorMessage = "Invalid email";
+					break;
+				case typeof name !== "string":
+                    errorMessage = "Invalid name";
+                    break;
+				default:
+					break;
+			}
+
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+			}
+            const answer = await userService.register(req.body)
+
+            res.json(answer)
         } catch (error) {
-            
+            console.log(error)
+            res.json({
+                success: false,
+                message: "Unhandled error"
+            })
         }
     },
+    // login: async(req, res) => {
+    //     try {
+            
+    //     } catch (error) {
+    //         console.log(error)
+    //         return {
+    //             success: false,
+
+    //         }
+    //     }
+    // },
 };

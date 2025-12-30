@@ -7,7 +7,10 @@ export const UserRepository: UserRepositoryContract = {
 			const existingUser = await PRISMA_CLIENT.user.findUnique({
 				where: { email },
 			});
-			if (existingUser) {
+			const existingUser2 = await PRISMA_CLIENT.user.findUnique({
+				where: { username },
+			});
+			if (existingUser !== null || existingUser2 !== null) {
 				return "duplicate";
 			}
 			const user = await PRISMA_CLIENT.user.create({
