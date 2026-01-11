@@ -187,6 +187,8 @@ export interface UserRepositoryContract {
 	userClearRecovery(email: string): Promise<string>
 }
 
+export type ControllerAddressType = Prisma.AddressGetPayload<{}>;
+
 interface ControllerSupportBody {
 	name: string
 	number: string
@@ -216,11 +218,72 @@ interface ControllerRecoveryBody{
 interface ControllerRecoveryCodeBody{
 	password: string
 }
+interface ControllerGetUserInfoBody{
+  name: string | null;
+  surname: string | null;
+  middleName: string | null;
+  email: string;
+  phoneNumber: string | null;
+  birthday: string | null;
+}
+interface ControllerGetAdressesInfoBody{
+  id: number;
+  city: string;
+  street: string;
+  houseNumber: string;
+  flat: string | null;
+  entrance: string | null;
+}[]
+interface ControllerGetUserOrdersBody {
+  orderDetails: {
+    id: number;
+    quantity: number;
+    price: number;
+    orderId: number;
+    productId: number;
+  }[] & {
+    name: string;
+    id: number;
+    email: string;
+    phoneNumber: string | null;
+    surname: string;
+    middleName: string | null;
+    deliveryAddress: string;
+    commentForOrder: string | null;
+    novaPostOrderNumber: string | null;
+    departureNumber: string | null;
+    typeOfPayment: string;
+    priceReduced: number | null;
+    fullPrice: number;
+    userId: number;
+    addressId: number;
+  } | null;
+}
+
 export interface UserControllerContract {
 	register: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerRegisterBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 	login: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerLoginBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 	recovery: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerRecoveryBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 	recoveryCode: (req: Request<{code: string}, ControllerSuccessResponse | ControllerErrorResponse, ControllerRecoveryCodeBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
-	support: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
-
+  support: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+  
+  getUserInfo: (req: Request<{userId: string}, ControllerSuccessResponse | ControllerErrorResponse, ControllerGetUserInfoBody, object, {jwt: string}>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	
+  getAddressesInfo: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerGetAdressesInfoBody, object, {jwt: string}>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	
+  updateUser: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, UserMePatch, object, {jwt: string}>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	
+  updateAddress: (req: Request<{id: string}, ControllerSuccessResponse | ControllerErrorResponse, ControllerAddressType>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	
+  createAdress: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerAddressType>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	
+  deleteAdress: (req: Request<{id: string}, ControllerSuccessResponse | ControllerErrorResponse>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	
+  getUserOrders: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerGetUserOrdersBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	
+  cancelOrders: (req: Request<{orderId: string}, ControllerSuccessResponse | ControllerErrorResponse>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	
+  getOrderStatus: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 }
+
+

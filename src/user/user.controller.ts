@@ -180,4 +180,218 @@ export const UserController: UserControllerContract = {
             })
         }
     },
+    recoveryCode: async (req, res) => {
+        try{
+            let { code } = req.params
+            let { password } = req.body
+            let errorMessage: string | null = null;
+            switch (true){
+                case typeof code !== "string":
+                    errorMessage = "Invalid code";
+                    break;
+                case typeof password !== "string":
+                    errorMessage = "Invalid password";
+                    break;
+                default:
+                    break;
+            }
+            if (errorMessage) {
+                res.status(400).json({
+                    success: false,
+                    message: errorMessage,
+                });
+            }
+            //const recoveryCode = await userService.recoveryCode(code, password)
+            //return recoveryCode
+        }catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+    getUserInfo: async (req, res): Promise<void> => {
+        try{
+            const getUserInfo = await userService.me(res.locals.jwt)
+            res.status(200).json({
+                success: true,
+                data: getUserInfo
+            });
+        }catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+    getAddressesInfo: async (req, res) => {
+        try{
+            const getUserAddresses = await userService.addresses(res.locals.jwt)
+            res.status(200).json({
+                success: true,
+                data: getUserAddresses
+            });
+        }catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+
+    updateUser: async (req, res) => {
+        try {
+            let user = req.body
+            if (typeof user !== "object") {
+                res.status(400).json({
+                    success: false,
+                    message: "Invalid user data",
+                });
+            }
+            const updateUserDate = await userService.patchMe(res.locals.jwt, user)
+            res.status(200).json({
+                success: true,
+                data: updateUserDate
+            });
+            
+        } catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+
+    updateAddress: async (req, res) => {
+        try {
+            let adress = req.body
+            if (typeof adress !== "object") {
+                res.status(400).json({
+                    success: false, 
+                    message: "Invalid adress data",
+                });
+            }
+            const updateAddress = await userService.patchAddresses(res.locals.jwt, adress)
+            res.status(200).json({
+                success: true,
+                data: updateAddress
+            });
+        } catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+    createAdress: async (req, res) => {
+        try {
+            let adress = req.body
+            if (typeof adress !== "object") {
+                res.status(400).json({
+                    success: false,
+                    message: "Invalid adress data",
+                });
+            }
+            const createAdress = await userService.postAddresses(res.locals.jwt, adress)
+            res.status(200).json({
+                success: true,
+                data: createAdress
+            });
+        } catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+
+    deleteAdress: async (req, res) => {
+        try{
+            let {adress} = req.body
+            if (typeof adress !== "number") {
+                res.status(400).json({
+                    success: false,
+                    message: "Invalid adress id",
+                });
+            }
+            userService.deleteAddresses(adress)
+            res.status(200).json({
+                success: true,
+                data: {}
+            });
+        }catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+
+    cancelOrders: async (req, res) => {
+        try{
+            let orderId = req.body
+            if (typeof orderId !== "number") {
+                res.status(400).json({
+                    success: false,
+                    message: "Invalid order id",
+                });
+            }
+            userService.orderCancel(orderId)
+            res.status(200).json({
+                success: true,
+                data: {}
+            });
+        } catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+    getOrderStatus: async (req, res) => {
+        try{
+            let orders = req.body
+
+            if (typeof orders !== "object") {
+                res.status(400).json({
+                    success: false,
+                    message: "Invalid orders",
+                });
+            }
+            const getOrderStatus = await userService.orderStatus(orders)
+            res.status(200).json({
+                success: true,
+                data: getOrderStatus
+            });
+        } catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
+    },
+    getUserOrders: async (req, res) => {
+        try{
+            const getUserOrders = await userService.orders(res.locals.jwt)
+            res.status(200).json({
+                success: true,
+                data: getUserOrders
+            });
+        }catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }   
+    },
 };
