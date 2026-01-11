@@ -8,9 +8,9 @@ UserRouter.post("/users/register", UserController.register);
 //
 UserRouter.post("/users/login", UserController.login);
 //
-UserRouter.patch("/users/recovery", UserController.resetPassword);
+UserRouter.patch("/users/recovery", UserController.recovery);
 //
-UserRouter.patch("/users/recovery/:code", UserController.setNewPassword);
+UserRouter.patch("/users/recovery/:code", UserController.recoveryCode);
 
 //
 UserRouter.get("/users/me", authMiddleware, UserController.getUserInfo);
@@ -18,10 +18,10 @@ UserRouter.get("/users/me", authMiddleware, UserController.getUserInfo);
 UserRouter.get(
 	"/users/me/adresses",
 	authMiddleware,
-	UserController.getUserAdresses,
+	UserController.getAddressesInfo,
 );
 //
-UserRouter.patch("users/me", authMiddleware, UserController.updateUserInfo);
+UserRouter.patch("/users/me", authMiddleware, UserController.updateUser);
 //
 UserRouter.patch(
 	"/users/me/addresses",
@@ -32,26 +32,31 @@ UserRouter.patch(
 UserRouter.post(
 	"/users/me/addresses",
 	authMiddleware,
-	UserController.createAddress,
+	UserController.createAdress,
 );
 //
 UserRouter.delete(
 	"/users/me/adresses",
 	authMiddleware,
-	UserController.deleteAddress,
+	UserController.deleteAdress,
 );
-UserRouter.get("users/me/order", authMiddleware, UserController.loadAllOrders);
+UserRouter.get("/users/me/order", authMiddleware, UserController.getUserOrders);
 //
 UserRouter.post(
 	"/users/me/order/cancel",
 	authMiddleware,
-	UserController.cancelOrder,
+	UserController.cancelOrders,
 );
 UserRouter.get(
 	"/users/me/order-status",
 	authMiddleware,
 	UserController.getOrderStatus,
 );
+// UserRouter.post(
+// 	"/users/me/order/create",
+// 	authMiddleware,
+// 	UserController.getOrderStatus,
+// );
 //
 UserRouter.post("/support", UserController.support);
 

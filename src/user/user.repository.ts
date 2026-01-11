@@ -61,6 +61,11 @@ export const UserRepository: UserRepositoryContract = {
 		try {
 			const user = await PRISMA_CLIENT.user.findUnique({
 				where: { id: userId },
+				omit: {
+					password: true,
+					id: true,
+					recoveryCode: true
+				}
 			});
 			return user;
 		} catch (error) {

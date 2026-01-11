@@ -1,4 +1,4 @@
-import { userService } from "./user.service";
+import { userService, verifyAndDecodeJwt } from "./user.service";
 import { UserControllerContract } from "./user.types";
 
 export const UserController: UserControllerContract = {
@@ -170,8 +170,15 @@ export const UserController: UserControllerContract = {
 					message: errorMessage,
 				});
 			}
-            const recovery = await userService.recovery(email)
-            return recovery 
+            function generateSixDigitCode(): string {
+                const randomNumber = Math.floor(Math.random() * 1000000);
+                return randomNumber.toString().padStart(6, '0');
+            }
+
+            const code = generateSixDigitCode();
+            
+            const recovery = await userService.recovery(email, code)
+            
         } catch (error) {
             console.log(error)
             res.json( {
@@ -201,8 +208,26 @@ export const UserController: UserControllerContract = {
                     message: errorMessage,
                 });
             }
-            //const recoveryCode = await userService.recoveryCode(code, password)
-            //return recoveryCode
+            if (!res.locals.jwt){
+                res.json({
+                success: false,
+                message: "invalid JWT",
+                })
+            }
+            let decoded = verifyAndDecodeJwt(res.locals.jwt);
+            if (!decoded || decoded.userId === undefined) {
+                res.status(401).json({
+                    success: false,
+                    message: "invalid JWT",
+                })
+                return;
+            }
+            const userId: number = decoded.userId;
+            const recoveryCode = await userService.recoveryCode(userId, password)
+            res.status(200).json({
+                success: true,
+                data: {},
+            })
         }catch (error) {
             console.log(error)
             res.json( {

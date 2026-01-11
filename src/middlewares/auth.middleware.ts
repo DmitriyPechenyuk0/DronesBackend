@@ -17,7 +17,7 @@ export function authMiddleware(
 
 		const token = authHeader.replace("Bearer ", "");
 		const payload = verify(token, env.SECRET_KEY) as { userId: number };
-		res.locals.userId = payload.userId;
+		res.locals.jwt = token;
 	} catch (error) {
 		res.status(401).json({ success: false, message: "Unauthorized" });
 		return;

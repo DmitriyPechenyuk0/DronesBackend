@@ -182,9 +182,9 @@ export interface UserRepositoryContract {
 	updateUser(data: UserMePatchRepository): Promise<UserMePatchRepository | null>;
 	updateUserPassword(userId: number, password: string): Promise<UserType>;
 	getByEmail(email: string): Promise<UserType | null>;
-	getById(userId: number): Promise<UserType | null>;
+	getById(userId: number): Promise<Omit<UserType, 'id' | 'password' | 'recoveryCode'> | null>;
 	userSetRecovery(email: string, code: string): Promise<string>
-	userClearRecovery(email: string): Promise<string>
+	// userClearRecovery(email: string): Promise<string>
 }
 
 export type ControllerAddressType = Prisma.AddressGetPayload<{}>;
@@ -264,7 +264,7 @@ export interface UserControllerContract {
 	register: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerRegisterBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 	login: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerLoginBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 	recovery: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerRecoveryBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
-	recoveryCode: (req: Request<{code: string}, ControllerSuccessResponse | ControllerErrorResponse, ControllerRecoveryCodeBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+	recoveryCode: (req: Request<{code: string}, ControllerSuccessResponse | ControllerErrorResponse, ControllerRecoveryCodeBody, object, {jwt: string}>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
   support: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, ControllerSupportBody>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
   
   getUserInfo: (req: Request<{userId: string}, ControllerSuccessResponse | ControllerErrorResponse, ControllerGetUserInfoBody, object, {jwt: string}>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
