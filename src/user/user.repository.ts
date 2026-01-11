@@ -30,6 +30,9 @@ export const UserRepository: UserRepositoryContract = {
 	},
 	async updateUser(data) {
 		try {
+            if (!data.id) {
+                throw new Error("User ID is required for update");
+            }
 			const user = await PRISMA_CLIENT.user.update({
 				where: { id: data.id },
 				data,
@@ -66,10 +69,10 @@ export const UserRepository: UserRepositoryContract = {
 		}
 	},
 
-	async getOrders(orderId) {
+	async getOrders(userId) {
 		try {
-			const order = await PRISMA_CLIENT.order.findUnique({
-				where: { id: orderId },
+			const order = await PRISMA_CLIENT.order.findFirst({
+				where: { userId },
 				include: {
 					orderDetails: true,
 				},

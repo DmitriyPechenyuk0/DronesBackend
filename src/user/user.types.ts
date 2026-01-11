@@ -14,7 +14,8 @@ export type OrderType = Prisma.OrderGetPayload<{
 		orderDetails: true;
 	};
 }>;
-export type AddressType = Prisma.AddressGetPayload<{}>;
+export type AddressType = Omit<Prisma.AddressGetPayload<{}>, "userId">;
+export type AddressTypeCreate = Prisma.AddressGetPayload<{}>;
 export type UserType = Prisma.UserGetPayload<{}>;
 export type UserCreateType = Prisma.UserUncheckedCreateInput;
 
@@ -37,15 +38,7 @@ export interface UserLoginSuccessResponse {
 
 export interface UserMeSuccessResponse {
 	success: true;
-	data: {
-		id: number;
-		email: string;
-		firstname: string;
-		secondname: string;
-		thirdname: string;
-		birthdate: string;
-		number: number;
-	};
+	data : Partial<Omit<Prisma.UserGetPayload<{}>, "password" | "recoveryCode" | "id" | "username">>;
 }
 
 export interface UserAddressesSuccessResponse {
@@ -54,28 +47,22 @@ export interface UserAddressesSuccessResponse {
 		id: number;
 		city: string;
 		street: string;
-		house: string;
-		apartment: string;
-		entrance: number;
+		houseNumber: string;
+		flat: string | null;
+		entrance: string | null;
 	}[];
 }
-export interface UserMePatch {
-	id: number;
-	email: string;
-	firstname: string;
-	secondname: string;
-	thirdname: string;
-	birthdate: string;
-	number: number;
-}
+
+export type UserMePatch = Partial<Omit<UserType, "id" | "username" | "password" | "recoveryCode">>;
+export type UserMePatchRepository = Partial<Omit<UserType, "username" | "password" | "recoveryCode">>;
 
 export interface UserAddressesPatch {
 	id: number;
 	city: string;
 	street: string;
-	house: string;
-	apartment: string;
-	entrance: number;
+	houseNumber: string;
+	flat: string | null;
+	entrance: string | null;
 }
 
 export interface UserAddressesPatchSuccessResponse {
@@ -84,43 +71,46 @@ export interface UserAddressesPatchSuccessResponse {
 		id: number;
 		city: string;
 		street: string;
-		house: string;
-		apartment: string;
-		entrance: number;
+		houseNumber: string;
+		flat: string | null;
+		entrance: string | null;
 	};
 }
 
 export interface UserOrderSuccessResponse {
 	success: true;
 	data: {
-		orders: {
-			name: string;
-			secondName: string;
-			middleName: string;
-			orderId: number;
-			orderDate: string;
-			trackingNumber: number;
-			deliveryAddress: string;
-			paymentMethod: string;
-			items: {
-				id: 1;
-				name: string;
-				image: string;
-				quantity: number;
-				price: number;
-			}[];
-			fullPrice: number;
-			discount: number;
-			priceReduced: number;
-		}[];
-	};
+    orderDetails: {
+        id: number;
+        quantity: number;
+        price: number;
+        orderId: number;
+        productId: number;
+    }[];
+  } & {
+      name: string;
+      id: number;
+      email: string;
+      phoneNumber: string | null;
+      surname: string;
+      middleName: string | null;
+      deliveryAddress: string;
+      commentForOrder: string | null;
+      novaPostOrderNumber: string | null;
+      departureNumber: string | null;
+      typeOfPayment: string;
+      priceReduced: number | null;
+      fullPrice: number;
+      userId: number;
+      addressId: number;
+  } | null;
 }
 
 export interface UserOrderStatusSuccessResponse {
 	success: true;
 	data: {
 		orders: {
-			trackingNumber: number;
+			novaPostOrderNumber: number;
 			status: string;
 		}[];
 	};
@@ -141,49 +131,47 @@ export interface UserServiceContract {
 		email: string,
 		password: string,
 	): Promise<UserErrorResponse | UserLoginSuccessResponse>;
-	recovery(email: string): Promise<UserSuccessResponse | UserErrorResponse>;
-	// recoveryCode(
-	// 	code: string,
-	// 	password: string,
-	// ): Promise<UserSuccessResponse | UserErrorResponse>;
-	// me(jwt: string): Promise<UserErrorResponse | UserMeSuccessResponse>;
-	// addresses(
-	// 	jwt: string,
-	// ): Promise<UserErrorResponse | UserAddressesSuccessResponse>;
-	// patchMe(
-	// 	jwt: string,
-	// 	body: UserMePatch,
-	// ): Promise<UserErrorResponse | UserMeSuccessResponse>;
-	// patchAddresses(
-	// 	jwt: string,
-	// 	body: UserAddressesPatch,
-	// ): Promise<UserErrorResponse | UserAddressesPatchSuccessResponse>;
-	// postAddresses(
-	// 	jwt: string,
-	// 	body: UserAddressesPatch,
-	// ): Promise<UserErrorResponse | UserAddressesPatchSuccessResponse>;
-	// deleteAddresses(
-	// 	jwt: string,
-	// 	id: number,
-	// ): Promise<UserErrorResponse | UserSuccessResponse>;
-	// orders(jwt: string): Promise<UserErrorResponse | UserOrderSuccessResponse>;
-	// orderCancel(
-	// 	jwt: string,
-	// 	orderId: number,
-	// ): Promise<UserErrorResponse | UserSuccessResponse>;
-	// orderStatus(
-	// 	jwt: string,
-	// ): Promise<UserErrorResponse | UserOrderStatusSuccessResponse>;
+	recovery(email: string, code: string): Promise<UserSuccessResponse | UserErrorResponse>;
+	recoveryCode(
+		userId: number,
+		password: string,
+	): Promise<UserSuccessResponse | UserErrorResponse>;
+	me(jwt: string): Promise<UserErrorResponse | UserMeSuccessResponse>;
+	addresses(
+		jwt: string,
+	): Promise<UserErrorResponse | UserAddressesSuccessResponse>;
+	patchMe(
+		jwt: string,
+		body: UserMePatch,
+	): Promise<UserErrorResponse | UserMeSuccessResponse>;
+	patchAddresses(
+		jwt: string,
+		body: UserAddressesPatch,
+	): Promise<UserErrorResponse | UserAddressesPatchSuccessResponse>;
+	postAddresses(
+		jwt: string,
+		body: UserAddressesPatch,
+	): Promise<UserErrorResponse | UserAddressesPatchSuccessResponse>;
+	deleteAddresses(
+		id: number
+	): Promise<UserErrorResponse | UserSuccessResponse>;
+	orders(jwt: string): Promise<UserErrorResponse | UserOrderSuccessResponse>;
+	orderCancel(
+		orderId: number
+	): Promise<UserErrorResponse | UserSuccessResponse>;
+	orderStatus(
+		jwt: string,
+	): Promise<UserErrorResponse | UserOrderStatusSuccessResponse>;
 	support(
 		message: Support,
 	): Promise<UserErrorResponse | UserSuccessResponse>;
 }
 
 export interface UserRepositoryContract {
-	getOrders(orderId: number): Promise<OrderType | null>;
+	getOrders(userId: number): Promise<OrderType | null>;
 	cancelOrder(orderId: number): Promise<null>;
 	getAddresses(userId: number): Promise<AddressType[]>;
-	createAddress(data: AddressType): Promise<AddressType | null>;
+	createAddress(data: AddressTypeCreate): Promise<AddressTypeCreate | null>;
 	deleteAddress(addressId: number): Promise<boolean>;
 	updateAddress(addressId: number, data: AddressType): Promise<AddressType>;
 	createUser(
@@ -191,7 +179,7 @@ export interface UserRepositoryContract {
 		password: string,
 		name: string,
 	): Promise<"created" | "duplicate" | null>;
-	updateUser(data: UserType): Promise<UserType>;
+	updateUser(data: UserMePatchRepository): Promise<UserMePatchRepository | null>;
 	updateUserPassword(userId: number, password: string): Promise<UserType>;
 	getByEmail(email: string): Promise<UserType | null>;
 	getById(userId: number): Promise<UserType | null>;
