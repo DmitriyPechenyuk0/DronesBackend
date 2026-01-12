@@ -1,3 +1,4 @@
+import { email } from "envalid/dist/validators";
 import { userService, verifyAndDecodeJwt } from "./user.service";
 import { UserControllerContract } from "./user.types";
 
@@ -316,12 +317,27 @@ export const UserController: UserControllerContract = {
     createAdress: async (req, res) => {
         try {
             let adress = req.body
-            if (typeof adress !== "object") {
-                res.status(400).json({
-                    success: false,
-                    message: "Invalid adress data",
-                });
-            }
+            let { city, street, houseNumber } = adress;
+
+            let errorMessage: string | null = null;
+			switch (true) {
+				case typeof city !== "string":
+					errorMessage = "Invalid city";
+					break;
+				case typeof street !== "string":
+                    errorMessage = "Invalid street";
+                    break;
+                case typeof houseNumber !== "string":
+                    errorMessage = "Invalid house number";
+                    break;
+			}
+
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+			}
             const createAdress = await userService.postAddresses(res.locals.jwt, adress)
             res.status(200).json({
                 success: true,
@@ -418,5 +434,99 @@ export const UserController: UserControllerContract = {
                 message: 'Unhandled error'
             })
         }   
+    },
+    createOrder: async (req, res) => {
+        try {
+            let order = req.body
+            let errorMessage: string | null = null;
+            let { name, surname, email, deliveryAddress, typeOfPayment, fullPrice, addressId, priceReduced, orderDetails } = order;
+            if (orderDetails && orderDetails.length > 0) {
+                orderDetails.forEach((item) => {
+                    let { id, quantity, price, orderId, productId } = item;
+                    switch (true) {
+                        case typeof quantity !== "number":
+                            errorMessage = "Invalid quantity";
+                            break;
+                        case typeof price !== "number":
+                            errorMessage = "Invalid price";
+                            break;
+                        case typeof productId !== "number":
+                            errorMessage = "Invalid product ID";
+                            break;
+                        case typeof orderId !== "number":
+                            errorMessage = "Invalid order ID";
+                            break;
+                    }
+                    if (errorMessage) {
+				        res.status(400).json({
+				            success: false,
+				            message: errorMessage,
+				        });
+                    };
+                });
+            }
+			switch (true) {
+				case typeof name !== "string":
+					errorMessage = "Invalid name";
+					break;
+				case typeof surname !== "string":
+					errorMessage = "Invalid surname";
+					break;
+                case typeof deliveryAddress !== "string":
+                    errorMessage = "Invalid delivery address";
+                    break;
+                case typeof typeOfPayment !== "string":
+                    errorMessage = "Invalid type of payment";
+                    break;
+                case typeof fullPrice !== "number":
+                    errorMessage = "Invalid full price";
+                    break;
+				case typeof email !== "string":
+                    errorMessage = "Email must be a string";
+                    break;
+                case typeof addressId !== "number":
+                    errorMessage = "Invalid address ID";
+                    break;
+                case typeof priceReduced !== "number":
+                    errorMessage = "Invalid reduced price";
+                    break;
+                case email.length === 0:
+                    errorMessage = "Email cannot be empty";
+                    break;
+                case !email.includes('@'):
+                    errorMessage = "Email must contain @";
+                    break;
+                case email.indexOf('@') === 0:
+                    errorMessage = "Email cannot start with @";
+                    break;
+                case email.indexOf('@') === email.length - 1:
+                    errorMessage = "Email cannot end with @";
+                    break;
+                case !email.includes('.'):
+                    errorMessage = "Email must contain a domain";
+                    break;
+
+				default:
+					break;
+			}
+
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+			}
+            const createOrder = await userService.postOrder(res.locals.jwt, order)
+            res.status(200).json({
+                success: true,
+                data: createOrder
+            });
+        } catch (error) {
+            console.log(error)
+            res.json( {
+                success: false,
+                message: 'Unhandled error'
+            })
+        }
     },
 };

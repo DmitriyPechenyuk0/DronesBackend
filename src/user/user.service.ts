@@ -426,5 +426,26 @@ export const userService: UserServiceContract = {
         message: "Unhandled error"
       }
     }
+  },
+  postOrder: async(jwt, body) => {
+    try {
+      const newOrder = await UserRepository.createOrder(body);
+      if (!newOrder) {
+        return {
+          success: false,
+          message: "Unhandled error"
+        }
+      }
+      return {
+        success: true,
+        data: newOrder
+      };
+    } catch (error) {
+      console.log("error")
+      return {
+        success: false,
+        message: "Unhandled error"
+      }
+    }
   }
 }

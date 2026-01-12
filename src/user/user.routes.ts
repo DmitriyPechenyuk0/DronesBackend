@@ -52,12 +52,12 @@ UserRouter.get(
 	authMiddleware,
 	UserController.getOrderStatus,
 );
-// UserRouter.post(
-// 	"/users/me/order/create",
-// 	authMiddleware,
-// 	UserController.getOrderStatus,
-// );
-//
+UserRouter.post(
+	"/users/me/order/create",
+	authMiddleware,
+	UserController.createOrder,
+);
+
 UserRouter.post("/support", UserController.support);
 
 

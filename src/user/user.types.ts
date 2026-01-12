@@ -162,6 +162,10 @@ export interface UserServiceContract {
 	orderStatus(
 		jwt: string,
 	): Promise<UserErrorResponse | UserOrderStatusSuccessResponse>;
+	postOrder(
+		jwt: string,
+		body: OrderType,
+	): Promise<UserErrorResponse | UserSuccessResponse>;
 	support(
 		message: Support,
 	): Promise<UserErrorResponse | UserSuccessResponse>;
@@ -170,6 +174,7 @@ export interface UserServiceContract {
 export interface UserRepositoryContract {
 	getOrders(userId: number): Promise<OrderType | null>;
 	cancelOrder(orderId: number): Promise<null>;
+	createOrder(data: OrderType): Promise<OrderType | null>;
 	getAddresses(userId: number): Promise<AddressType[]>;
 	createAddress(data: AddressTypeCreate): Promise<AddressTypeCreate | null>;
 	deleteAddress(addressId: number): Promise<boolean>;
@@ -284,6 +289,8 @@ export interface UserControllerContract {
   cancelOrders: (req: Request<{orderId: string}, ControllerSuccessResponse | ControllerErrorResponse>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 	
   getOrderStatus: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
+
+  createOrder: (req: Request<object, ControllerSuccessResponse | ControllerErrorResponse, OrderType, object, {jwt: string}>, res: Response<ControllerSuccessResponse | ControllerErrorResponse>) => Promise<void>
 }
 
 

@@ -182,4 +182,29 @@ export const UserRepository: UserRepositoryContract = {
 		}
 		
 	},
+	createOrder: async (data) => {
+		try {
+			const { orderDetails, id, ...orderData } = data;
+			const order = await PRISMA_CLIENT.order.create({
+				data: {
+                    ...orderData,
+                    orderDetails: {
+                        create: data.orderDetails.map((detail) => ({
+                        	quantity: detail.quantity,
+                            price: detail.price,
+                        	productId: detail.productId,
+                    	})),
+                	},
+            	},
+				include: {
+					orderDetails: true,
+				},
+			});
+			return order;
+		} catch (error) {
+			console.error("Error creating order:", error);
+			return null;
+		}
+	},	
+
 };
