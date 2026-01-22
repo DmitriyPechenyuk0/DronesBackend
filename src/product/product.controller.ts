@@ -62,6 +62,7 @@ export const ProductController: ProductControllerContract = {
 					success: false,
 					message: errorMessage,
 				});
+				return
 			}
 			const query = {
 				page: parsedPage,
@@ -100,6 +101,7 @@ export const ProductController: ProductControllerContract = {
 					success: false,
 					message: errorMessage,
 				});
+				return
 			}
 			let product = await ProductService.getById(parsedId);
 
@@ -145,6 +147,7 @@ export const ProductController: ProductControllerContract = {
 					success: false,
 					message: errorMessage,
 				});
+				return
 			}
 
 			let product = await ProductService.create(req.body);
@@ -194,6 +197,7 @@ export const ProductController: ProductControllerContract = {
 					success: false,
 					message: errorMessage,
 				});
+				return
 			}
 
 			let product = await ProductService.fullUpdate(req.body, parsedId);
@@ -227,6 +231,60 @@ export const ProductController: ProductControllerContract = {
 				return;
 			}
 			let result = await ProductService.delete(parsedId);
+
+			res.status(200).json(result);
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({
+				success: false,
+				message: "Server error",
+			});
+		}
+	},
+	suggestions: async (req, res) => {
+		try {
+			let { new: newPar, popular, offset, limit, perPage, page } = req.query;
+			let finallyQuery: string[] = []
+
+			let errorMessage: string | null = null;
+
+			switch (true) {
+				case newPar === undefined || typeof newPar !== "string" || (newPar.toLowerCase() !== 'false' && newPar.toLowerCase() !== 'true'):
+					errorMessage = "Invalid query parameter 'new' ";
+					break;
+				case popular === undefined || typeof popular !== "string" || popular.toLowerCase() !== 'false' && popular.toLowerCase() !== 'true':
+					errorMessage = "Invalid query parameter 'popular' ";
+					break;
+
+				case offset === undefined || typeof offset !== "string" || offset === "" || isNaN(+offset):
+					errorMessage = "Invalid query parameter 'offset' ";
+					break;
+
+				case limit === undefined || typeof limit !== "string" || limit === "" || isNaN(+limit):
+					errorMessage = "Invalid query parameter 'limit'";
+					break;
+
+				case perPage === undefined || typeof perPage !== "string" || perPage === "" || isNaN(+perPage):
+					errorMessage = "Invalid query parameter 'perPage'";
+					break;
+
+				case page === undefined || typeof page !== "string" || page === "" || isNaN(+page):
+					errorMessage = "Invalid query parameter 'page'";
+					break;
+				default:
+					break;
+			}
+
+			if (errorMessage) {
+				res.status(400).json({
+					success: false,
+					message: errorMessage,
+				});
+				return
+			} else{
+				finallyQuery.push(newPar, popular, offset, limit, perPage, page)
+			}
+			let result = await ProductService.suggestions(...finallyQuery);
 
 			res.status(200).json(result);
 		} catch (error) {

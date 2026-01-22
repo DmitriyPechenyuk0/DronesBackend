@@ -178,4 +178,59 @@ export const ProductRepository: ProductRepositoryContract = {
 			return result;
 		}
 	},
+	getNew: async(offset, limit) => {
+		try {
+			return await PRISMA_CLIENT.product.findMany({
+				include: {
+					category: true
+				},
+				orderBy: {
+					id: 'desc'
+				},
+				skip: offset || 0,
+				take: limit || 3
+			});
+		} catch (error) {
+			console.log(error);
+			let result: ProductDeleteResponse = {
+				success: false,
+				message: "Server Error",
+			};
+			return result;
+		}
+	},
+	getPopular: async(offset, limit) => {
+		try {
+			const popular = await PRISMA_CLIENT.orderDetail.groupBy({
+				by: ['productId'],
+				_sum: {
+					quantity: true
+				},
+				orderBy: {
+					_sum: {
+						quantity: 'desc'
+					}
+				}
+			});
+			const productIds = popular.map(p => p.productId);
+		
+			return await PRISMA_CLIENT.product.findMany({
+				where: {
+					id: { in: productIds }
+				},
+				include: {
+					category: true
+				},
+				skip: offset || 0,
+				take: limit || 10
+			});
+		} catch (error) {
+			console.log(error);
+			let result: ProductDeleteResponse = {
+				success: false,
+				message: "Server Error",
+			};
+			return result;
+		}
+	},
 };

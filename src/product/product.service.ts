@@ -7,6 +7,7 @@ import {
 	ProductGetByIdSuccessResponse,
 	ProductServiceContract,
 	ProductWhereInput,
+	Product
 } from "./product.types";
 import { DuplicateError } from "./errors";
 
@@ -116,6 +117,53 @@ export const ProductService: ProductServiceContract = {
 		try {
 			let deleted = await ProductRepository.delete(id);
 			return null;
+		} catch (error) {
+			console.log(error);
+			return {
+				success: false,
+				message: "Server error",
+			};
+		}
+	},
+	suggestions: async(newPar, popular, offset, limit, perPage, page) => {
+		try {
+			const isNew = newPar?.toLowerCase() === 'true';
+			const isPopular = popular?.toLowerCase() === 'true';
+			const finalOffset = offset ? +offset : 0;
+			const finalLimit = limit ? +limit : 10;
+			const finalPerPage = perPage ? +perPage : 10;
+			const finalPage = page ? +page : 1;
+			
+			let result: Product[] | ProductErrorResponse
+			if (isNew){
+				result = await ProductRepository.getNew(finalOffset, finalLimit)
+
+				if (Array.isArray(result)) {
+					return {
+						success: true,
+						data: {
+							products: result
+						}
+					};
+				}
+				return result;
+			}
+			if (isPopular){
+				result = await ProductRepository.getPopular(finalOffset, finalLimit)
+				if (Array.isArray(result)) {
+					return {
+						success: true,
+						data: {
+							products: result
+						}
+					};
+				}
+				return result;
+			}
+			return {
+				success: false,
+				message: 'Choose one of query parameters'
+			}
 		} catch (error) {
 			console.log(error);
 			return {

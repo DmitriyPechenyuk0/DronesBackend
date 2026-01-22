@@ -159,7 +159,7 @@ export interface ProductServiceContract {
 		id: number,
 	) => Promise<ProductFullUpdateResponse>;
 	delete: (id: number) => Promise<ProductDeleteResponse | null>;
-	suggestions: (newPar?: boolean, popular?: boolean, offset?: number, limit?: number, perPage?: number, page?: number) => Promise<ProductGetAllResponse>;
+	suggestions: (newPar?: string, popular?: string, offset?: string, limit?: string, perPage?: string, page?: string) => Promise<ProductGetAllResponse>;
 }
 
 export interface ProductRepositoryContract {
@@ -178,7 +178,8 @@ export interface ProductRepositoryContract {
 		id: number,
 	) => Promise<ProductFullUpdateResponse>;
 	delete: (id: number) => Promise<ProductDeleteResponse | null>;
-	suggestions: (newPar?: boolean, popular?: boolean, offset?: number, limit?: number, perPage?: number, page?: number) => Promise<Product[]>;
+	getNew: (offset?: number, limit?: number) => Promise<Product[] | ProductErrorResponse>;
+	getPopular: (offset?: number, limit?: number) => Promise<Product[] | ProductErrorResponse>;
 }
 
 export type ProductWhereInput = Prisma.ProductWhereInput;
