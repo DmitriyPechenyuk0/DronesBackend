@@ -1,6 +1,7 @@
 # Drones
 
 ## Langs of README
+
 - [English](README.md)
 - [Українська](README.uk.md)
 - [Днепровский диалект](README.dp.md)
@@ -14,6 +15,7 @@
 - Bcrypt
 
 ## Installation
+
 ```bash
 git clone https://github.com/DmitriyPechenyuk0/DronesBackend.git
 cd DronesBackend
@@ -23,6 +25,7 @@ npm run dev
 ```
 
 ## Project structure
+
 ```
 coming soon
 ```
@@ -35,13 +38,13 @@ coming soon
 
 **Files:** - dot-case: `user.controller.ts`, `auth.middleware.ts`
 
-**Variables and functions:** 
+**Variables and functions:**
+
 - camelCase: `userId`, `getUserById()`
 - Constants: UPPER_SNAKE_CASE - `MAX_ATTEMPTS`
 - Boolean: `isActive`, `hasPermission`, `canEdit`
 
 **Classes** - PascalCase - `UserService` `DatabaseConnection`
-
 
 ### Basic principles
 
@@ -52,6 +55,7 @@ coming soon
 5. **Validating** all incoming data
 
 ### API response structure
+
 ```javascript
 // Success
 {
@@ -87,4 +91,3 @@ JWT_EXPIRES_IN=7d
 npm run dev      # Development
 npm start        # Production
 ```
-

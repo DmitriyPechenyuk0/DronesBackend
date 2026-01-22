@@ -1,6 +1,7 @@
 # Drones
 
 ## Мови README
+
 - [English](README.md)
 - [Українська](README.uk.md)
 - [Днепровский диалект](README.dp.md)
@@ -14,6 +15,7 @@
 - Bcrypt
 
 ## Встановлення
+
 ```bash
 git clone https://github.com/DmitriyPechenyuk0/DronesBackend.git
 cd DronesBackend
@@ -23,6 +25,7 @@ npm run dev
 ```
 
 ## Структура проекту
+
 ```
 камінг сун
 ```
@@ -31,11 +34,12 @@ npm run dev
 
 ### Іменування
 
-**Гілки** - у форматі "feature/короткий_опис_таски"
+**Гілки** - у форматі "feature/короткий*опис*таски"
 
 **Файли:** - dot-case: `user.controller.ts`, `auth.middleware.ts`
 
-**Змінні та функції:** 
+**Змінні та функції:**
+
 - camelCase: `userId`, `getUserById()`
 - Константи: UPPER_SNAKE_CASE - `MAX_ATTEMPTS`
 - Булеві: `isActive`, `hasPermission`, `canEdit`
@@ -51,6 +55,7 @@ npm run dev
 5. **Валідація** всіх вхідних даних
 
 ### Структура відповідей api
+
 ```javascript
 // Success
 {
@@ -86,4 +91,3 @@ JWT_EXPIRES_IN=7d
 npm run dev      # Розробка
 npm start        # Продакшн
 ```
-
