@@ -1173,7 +1173,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Успішно видалено",
+            "description": "Успішно отримано",
             "content": {
               "application/json": {
                 "example": {
@@ -1207,7 +1207,18 @@
                 }
               }
             }
-          }
+          },
+          "500": {
+            "description": "Помилка сервера",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "Server error. Please try later"
+                }
+              }
+            }
+          },
         }
       }
     }
