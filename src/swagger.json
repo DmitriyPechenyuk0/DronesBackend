@@ -1169,6 +1169,18 @@
               "maximum": 200,
               "default": 20
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Сторінка пагінації",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 20
+            }
           }
         ],
         "responses": {
