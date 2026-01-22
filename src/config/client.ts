@@ -6,5 +6,5 @@ const adapter = new PrismaBetterSqlite3({
 })
 
 export const PRISMA_CLIENT = new PrismaClient({
-    adapter
+  adapter
 })

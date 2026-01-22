@@ -1111,6 +1111,105 @@
           }
         }
       }
+    },
+    "/products/suggestions": {
+      "post": {
+        "tags": ["Products"],
+        "summary": "Отримати список товарів за критеріями",
+        "parameters": [
+          {
+            "name": "new",
+            "in": "query",
+            "description": "Фільтр для нових товарів",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "popular",
+            "in": "query",
+            "description": "Фільтр для популярних товарів",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Зсув для пагінації",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Максимальна кількість результатів",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 10
+            }
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "description": "Кількість елементів на сторінку",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успішно видалено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "data": {
+                    "products": [
+                      {
+                        "id": 1,
+                        "name": "Drone X1",
+                        "price": 1200,
+                        "image": "picture",
+                        "discount": 50,
+                        "category": {
+                          "id": 1,
+                          "name": "drone"
+                        }
+                      },
+                      {
+                        "id": 2,
+                        "name": "Thermal Cam T2",
+                        "price": 1500,
+                        "image": "picture",
+                        "discount": 10,
+                        "category": {
+                          "id": 2,
+                          "name": "thermal"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

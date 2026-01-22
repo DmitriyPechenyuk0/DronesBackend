@@ -140,14 +140,6 @@ export interface ProductControllerContract {
 		>,
 		res: Response<ProductFullUpdateResponse>,
 	) => Promise<void>;
-	// partialUpdate: (
-	// 	req: Request<
-	// 		{ id: string },
-	// 		ProductPartialUpdateResponse,
-	// 		ProductPartialUpdateBody
-	// 	>,
-	// 	res: Response<ProductPartialUpdateResponse>,
-	// ) => Promise<void>;
 	delete: (
 		req: Request<object, ProductDeleteResponse | null, ProductDeleteBody>,
 		res: Response<ProductDeleteResponse | null>,
@@ -162,7 +154,6 @@ export interface ProductServiceContract {
 		query: ProductFullUpdateBody,
 		id: number,
 	) => Promise<ProductFullUpdateResponse>;
-	// partialUpdate: (query: ProductPartialUpdateBody,id: number) => Promise<ProductPartialUpdateResponse>
 	delete: (id: number) => Promise<ProductDeleteResponse | null>;
 }
 
@@ -181,7 +172,6 @@ export interface ProductRepositoryContract {
 		query: ProductFullUpdateBody,
 		id: number,
 	) => Promise<ProductFullUpdateResponse>;
-	// partialUpdate: (query: ProductPartialUpdateBody, id: number) => Promise<ProductPartialUpdateResponse>
 	delete: (id: number) => Promise<ProductDeleteResponse | null>;
 }
 
