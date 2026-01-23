@@ -178,17 +178,17 @@ export const ProductRepository: ProductRepositoryContract = {
 			return result;
 		}
 	},
-	getNew: async(offset, limit) => {
+	getNew: async (offset, limit) => {
 		try {
 			return await PRISMA_CLIENT.product.findMany({
 				include: {
-					category: true
+					category: true,
 				},
 				orderBy: {
-					id: 'desc'
+					id: "desc",
 				},
 				skip: offset || 0,
-				take: limit || 3
+				take: limit || 3,
 			});
 		} catch (error) {
 			console.log(error);
@@ -199,30 +199,30 @@ export const ProductRepository: ProductRepositoryContract = {
 			return result;
 		}
 	},
-	getPopular: async(offset, limit) => {
+	getPopular: async (offset, limit) => {
 		try {
 			const popular = await PRISMA_CLIENT.orderDetail.groupBy({
-				by: ['productId'],
+				by: ["productId"],
 				_sum: {
-					quantity: true
+					quantity: true,
 				},
 				orderBy: {
 					_sum: {
-						quantity: 'desc'
-					}
-				}
+						quantity: "desc",
+					},
+				},
 			});
-			const productIds = popular.map(p => p.productId);
-		
+			const productIds = popular.map((p) => p.productId);
+
 			return await PRISMA_CLIENT.product.findMany({
 				where: {
-					id: { in: productIds }
+					id: { in: productIds },
 				},
 				include: {
-					category: true
+					category: true,
 				},
 				skip: offset || 0,
-				take: limit || 10
+				take: limit || 10,
 			});
 		} catch (error) {
 			console.log(error);

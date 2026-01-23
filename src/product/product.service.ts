@@ -7,7 +7,7 @@ import {
 	ProductGetByIdSuccessResponse,
 	ProductServiceContract,
 	ProductWhereInput,
-	Product
+	Product,
 } from "./product.types";
 import { DuplicateError } from "./errors";
 
@@ -125,44 +125,50 @@ export const ProductService: ProductServiceContract = {
 			};
 		}
 	},
-	suggestions: async(newPar, popular, offset, limit) => {
+	suggestions: async (newPar, popular, offset, limit) => {
 		try {
-			const isNew = newPar?.toLowerCase() === 'true';
-			const isPopular = popular?.toLowerCase() === 'true';
+			const isNew = newPar?.toLowerCase() === "true";
+			const isPopular = popular?.toLowerCase() === "true";
 			const finalOffset = offset ? +offset : 0;
 			const finalLimit = limit ? +limit : 10;
-			
-			let result: Product[] | ProductErrorResponse
-			if (isNew){
-				result = await ProductRepository.getNew(finalOffset, finalLimit)
-				console.log(result)
+
+			let result: Product[] | ProductErrorResponse;
+			if (isNew) {
+				result = await ProductRepository.getNew(
+					finalOffset,
+					finalLimit,
+				);
+				console.log(result);
 				if (Array.isArray(result)) {
 					return {
 						success: true,
 						data: {
-							products: result
-						}
+							products: result,
+						},
 					};
 				}
 				return result;
 			}
-			if (isPopular){
-				result = await ProductRepository.getPopular(finalOffset, finalLimit)
-				console.log(result)
+			if (isPopular) {
+				result = await ProductRepository.getPopular(
+					finalOffset,
+					finalLimit,
+				);
+				console.log(result);
 				if (Array.isArray(result)) {
 					return {
 						success: true,
 						data: {
-							products: result
-						}
+							products: result,
+						},
 					};
 				}
 				return result;
 			}
 			return {
 				success: false,
-				message: 'Choose one of query parameters'
-			}
+				message: "Choose one of query parameters",
+			};
 		} catch (error) {
 			console.log(error);
 			return {

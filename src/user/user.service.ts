@@ -47,7 +47,6 @@ export const userService: UserServiceContract = {
 					}),
 				},
 			};
-			
 		} catch (error) {
 			console.log(error);
 			return { success: false, message: "Unhandled error" };
@@ -56,9 +55,13 @@ export const userService: UserServiceContract = {
 	async register(body) {
 		const { password, email, name } = body;
 		try {
-			const cryptedPassword = await bcrypt.hash(password, 12)
-			const user = await UserRepository.createUser(email, cryptedPassword, name);
-			console.log(user)
+			const cryptedPassword = await bcrypt.hash(password, 12);
+			const user = await UserRepository.createUser(
+				email,
+				cryptedPassword,
+				name,
+			);
+			console.log(user);
 			if (!user) {
 				return { success: false, message: "" };
 			}
@@ -103,15 +106,14 @@ export const userService: UserServiceContract = {
 			};
 		}
 	},
-	support: async(parsedBody) => {
+	support: async (parsedBody) => {
 		try {
-			let {name , email, number, description} = parsedBody
+			let { name, email, number, description } = parsedBody;
 			await transporter.sendMail({
 				from: env.PROJECT_MAIL,
 				to: env.DEVELOPER_MAIL,
 				subject: `🔔 New Support Ticket - ${name}`,
-				html: 
-				`
+				html: `
 				Hey there,
 				
 				You've got a new support ticket coming through!
@@ -135,317 +137,320 @@ export const userService: UserServiceContract = {
 				<br>
 				Your Drones Support Bot 🤖
 				
-				`
-				});
-			console.log("Support message successfuly sended")
+				`,
+			});
+			console.log("Support message successfuly sended");
 			return {
 				success: true,
-				data: {}
-			}
+				data: {},
+			};
 		} catch (error) {
-			console.log("error")
+			console.log("error");
 			return {
 				success: false,
-				message: "Unhandled error"
-			}
+				message: "Unhandled error",
+			};
 		}
 	},
-	recovery: async(email, code) => {
+	recovery: async (email, code) => {
 		try {
-			const response = await UserRepository.userSetRecovery(email, code)
-			if (response === 'success'){
+			const response = await UserRepository.userSetRecovery(email, code);
+			if (response === "success") {
 				return {
 					success: true,
-					data: {}
-				}
+					data: {},
+				};
 			}
-			if (response === 'error'){
+			if (response === "error") {
 				return {
 					success: false,
-					message: "Unhandled Error"
-				}
+					message: "Unhandled Error",
+				};
 			}
-      return {
-        success: false,
-        message: "Unhandled Error"
-      }
-		} catch (error) {
-			console.log("error")
 			return {
 				success: false,
-				message: "Unhandled error"
-			}
+				message: "Unhandled Error",
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
 		}
 	},
-  recoveryCode: async(userId, password) => {
-    try {
-      const user = await UserRepository.updateUserPassword(userId, password)
-      if (!user) {
-        return {
-          success: false,
-          message: "Invalid recovery code"
-        }
-      }
-      return {
-        success: true,
-        data: {}
-      }
-    } catch (error) { 
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    }
-  },
-  addresses: async(jwt) => {
-    try {
-      let decoded = verifyAndDecodeJwt(jwt);
-      if (!decoded || decoded.userId === undefined) {
-        return {
-          success: false,
-          message: "invalid JWT",
-        };
-      }
-      const userId: number = decoded.userId;
-      const addresses = await UserRepository.getAddresses(userId);
-      return {
-        success: true,
-        data: addresses
-      }
-    } catch (error) {
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    }
-  },
-  patchMe: async(jwt, body) => {
-    try {
-      let decoded = verifyAndDecodeJwt(jwt);
-      if (!decoded || decoded.userId === undefined) {
-        return {
-          success: false,
-          message: "invalid JWT",
-        };
-      }
-      const userId: number = decoded.userId;
-      const updatedUser = await UserRepository.updateUser({
-        ...body,
-        id: userId
-      });
-      if (!updatedUser) {
-        return {
-          success: false,
-          message: "Unhandled error"
-        }
-      }
-      return {
-        success: true,
-        data: updatedUser
-      };
-    } catch (error) {
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    }
-  },
-  patchAddresses: async(jwt, body) => {
-    try {
-      let decoded = verifyAndDecodeJwt(jwt);
-      if (!decoded || decoded.userId === undefined) {
-        return {
-          success: false,
-          message: "invalid JWT",
-        };
-      }
-      const userId: number = decoded.userId;
-      const updatedAddress = await UserRepository.updateAddress(body.id, {
-        id: body.id,
-        city: body.city,
-        street: body.street,
-        houseNumber: body.houseNumber,
-        flat: body.flat,
-        entrance: body.entrance
-      });
-      if (!updatedAddress) {
-        return {
-          success: false,
-          message: "Unhandled error"
-        }
-      }
-      return {
-        success: true,
-        data: {
-          id: updatedAddress.id,
-          city: updatedAddress.city,
-          street: updatedAddress.street,
-          houseNumber: updatedAddress.houseNumber,
-          flat: updatedAddress.flat,
-          entrance: updatedAddress.entrance
-        }
-      };
-    } catch (error) {
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    }
-  },
-  postAddresses: async(jwt, body) => {
-    try {
-      let decoded = verifyAndDecodeJwt(jwt);
-      if (!decoded || decoded.userId === undefined) {
-        return {
-          success: false,
-          message: "invalid JWT",
-        };
-      }
-      const userId: number = decoded.userId;
-      const newAddress = await UserRepository.createAddress({
-        userId: userId, 
-        id: body.id,
-        city: body.city,
-        street: body.street,
-        houseNumber: body.houseNumber,
-        flat: body.flat,
-        entrance: body.entrance
-      });
-      if (!newAddress) {
-        return {
-          success: false,
-          message: "Unhandled error"
-        }
-      }
-      return {
-        success: true,
-        data: {
-          id: newAddress.id,
-          city: newAddress.city,
-          street: newAddress.street,
-          houseNumber: newAddress.houseNumber,
-          flat: newAddress.flat,
-          entrance: newAddress.entrance
-        }
-      };
-    } catch (error) {
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    } 
-  },
-  deleteAddresses: async(id) => {
-    try {
-      const deleted = await UserRepository.deleteAddress(id);
-      if (!deleted) {
-        return {
-          success: false,
-          message: "Unhandled error"
-        }
-      }
-      return {
-        success: true,
-        data: {}
-      };
-    } catch (error) {
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    }
-  },
-  orders: async(jwt) => {
-    try {
-      let decoded = verifyAndDecodeJwt(jwt);
-      if (!decoded || decoded.userId === undefined) {
-        return {
-          success: false,
-          message: "invalid JWT",
-        };
-      }
-      const userId: number = decoded.userId;
-      const orders = await UserRepository.getOrders(userId);
-      return {
-        success: true,
-        data: orders
-      }
-    } catch (error) {
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    }
-  },
-  orderCancel: async(orderId) => {
-    try {
-      await UserRepository.cancelOrder(orderId);
-      return {
-        success: true,
-        data: {}
-      }
-    } catch (error) {
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    }
-  },
-  orderStatus: async(jwt) => {
-    try {
-      // let decoded = verifyAndDecodeJwt(jwt);
-      // if (!decoded || decoded.userId === undefined) {
-        // return {
-          // success: false,
-          // message: "invalid JWT",
-        // };
-      // }
-      // const userId: number = decoded.userId;
-      const orders = {
-        novaPostOrderNumber: 123456789,
-        status: "In Transit"
-      }
-      return {
-        success: true,
-        data: {
-          orders: [orders]
-        }
-      }
-    } catch (error) {
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    }
-  },
-  postOrder: async(jwt, body) => {
-    try {
-      const newOrder = await UserRepository.createOrder(body);
-      if (!newOrder) {
-        return {
-          success: false,
-          message: "Unhandled error"
-        }
-      }
-      return {
-        success: true,
-        data: newOrder
-      };
-    } catch (error) {
-      console.log("error")
-      return {
-        success: false,
-        message: "Unhandled error"
-      }
-    }
-  }
-}
+	recoveryCode: async (userId, password) => {
+		try {
+			const user = await UserRepository.updateUserPassword(
+				userId,
+				password,
+			);
+			if (!user) {
+				return {
+					success: false,
+					message: "Invalid recovery code",
+				};
+			}
+			return {
+				success: true,
+				data: {},
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+	addresses: async (jwt) => {
+		try {
+			let decoded = verifyAndDecodeJwt(jwt);
+			if (!decoded || decoded.userId === undefined) {
+				return {
+					success: false,
+					message: "invalid JWT",
+				};
+			}
+			const userId: number = decoded.userId;
+			const addresses = await UserRepository.getAddresses(userId);
+			return {
+				success: true,
+				data: addresses,
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+	patchMe: async (jwt, body) => {
+		try {
+			let decoded = verifyAndDecodeJwt(jwt);
+			if (!decoded || decoded.userId === undefined) {
+				return {
+					success: false,
+					message: "invalid JWT",
+				};
+			}
+			const userId: number = decoded.userId;
+			const updatedUser = await UserRepository.updateUser({
+				...body,
+				id: userId,
+			});
+			if (!updatedUser) {
+				return {
+					success: false,
+					message: "Unhandled error",
+				};
+			}
+			return {
+				success: true,
+				data: updatedUser,
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+	patchAddresses: async (jwt, body) => {
+		try {
+			let decoded = verifyAndDecodeJwt(jwt);
+			if (!decoded || decoded.userId === undefined) {
+				return {
+					success: false,
+					message: "invalid JWT",
+				};
+			}
+			const userId: number = decoded.userId;
+			const updatedAddress = await UserRepository.updateAddress(body.id, {
+				id: body.id,
+				city: body.city,
+				street: body.street,
+				houseNumber: body.houseNumber,
+				flat: body.flat,
+				entrance: body.entrance,
+			});
+			if (!updatedAddress) {
+				return {
+					success: false,
+					message: "Unhandled error",
+				};
+			}
+			return {
+				success: true,
+				data: {
+					id: updatedAddress.id,
+					city: updatedAddress.city,
+					street: updatedAddress.street,
+					houseNumber: updatedAddress.houseNumber,
+					flat: updatedAddress.flat,
+					entrance: updatedAddress.entrance,
+				},
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+	postAddresses: async (jwt, body) => {
+		try {
+			let decoded = verifyAndDecodeJwt(jwt);
+			if (!decoded || decoded.userId === undefined) {
+				return {
+					success: false,
+					message: "invalid JWT",
+				};
+			}
+			const userId: number = decoded.userId;
+			const newAddress = await UserRepository.createAddress({
+				userId: userId,
+				id: body.id,
+				city: body.city,
+				street: body.street,
+				houseNumber: body.houseNumber,
+				flat: body.flat,
+				entrance: body.entrance,
+			});
+			if (!newAddress) {
+				return {
+					success: false,
+					message: "Unhandled error",
+				};
+			}
+			return {
+				success: true,
+				data: {
+					id: newAddress.id,
+					city: newAddress.city,
+					street: newAddress.street,
+					houseNumber: newAddress.houseNumber,
+					flat: newAddress.flat,
+					entrance: newAddress.entrance,
+				},
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+	deleteAddresses: async (id) => {
+		try {
+			const deleted = await UserRepository.deleteAddress(id);
+			if (!deleted) {
+				return {
+					success: false,
+					message: "Unhandled error",
+				};
+			}
+			return {
+				success: true,
+				data: {},
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+	orders: async (jwt) => {
+		try {
+			let decoded = verifyAndDecodeJwt(jwt);
+			if (!decoded || decoded.userId === undefined) {
+				return {
+					success: false,
+					message: "invalid JWT",
+				};
+			}
+			const userId: number = decoded.userId;
+			const orders = await UserRepository.getOrders(userId);
+			return {
+				success: true,
+				data: orders,
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+	orderCancel: async (orderId) => {
+		try {
+			await UserRepository.cancelOrder(orderId);
+			return {
+				success: true,
+				data: {},
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+	orderStatus: async (jwt) => {
+		try {
+			// let decoded = verifyAndDecodeJwt(jwt);
+			// if (!decoded || decoded.userId === undefined) {
+			// return {
+			// success: false,
+			// message: "invalid JWT",
+			// };
+			// }
+			// const userId: number = decoded.userId;
+			const orders = {
+				novaPostOrderNumber: 123456789,
+				status: "In Transit",
+			};
+			return {
+				success: true,
+				data: {
+					orders: [orders],
+				},
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+	postOrder: async (jwt, body) => {
+		try {
+			const newOrder = await UserRepository.createOrder(body);
+			if (!newOrder) {
+				return {
+					success: false,
+					message: "Unhandled error",
+				};
+			}
+			return {
+				success: true,
+				data: newOrder,
+			};
+		} catch (error) {
+			console.log("error");
+			return {
+				success: false,
+				message: "Unhandled error",
+			};
+		}
+	},
+};

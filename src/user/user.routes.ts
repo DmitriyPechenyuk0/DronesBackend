@@ -59,5 +59,3 @@ UserRouter.post(
 );
 
 UserRouter.post("/support", UserController.support);
-
-

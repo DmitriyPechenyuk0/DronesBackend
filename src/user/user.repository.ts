@@ -30,9 +30,9 @@ export const UserRepository: UserRepositoryContract = {
 	},
 	async updateUser(data) {
 		try {
-            if (!data.id) {
-                throw new Error("User ID is required for update");
-            }
+			if (!data.id) {
+				throw new Error("User ID is required for update");
+			}
 			const user = await PRISMA_CLIENT.user.update({
 				where: { id: data.id },
 				data,
@@ -64,8 +64,8 @@ export const UserRepository: UserRepositoryContract = {
 				omit: {
 					password: true,
 					id: true,
-					recoveryCode: true
-				}
+					recoveryCode: true,
+				},
 			});
 			return user;
 		} catch (error) {
@@ -173,29 +173,28 @@ export const UserRepository: UserRepositoryContract = {
 				},
 				data: {
 					recoveryCode: code,
-				}
-			})
-			return "success"
+				},
+			});
+			return "success";
 		} catch (error) {
 			console.error(error);
 			return "error";
 		}
-		
 	},
 	createOrder: async (data) => {
 		try {
 			const { orderDetails, id, ...orderData } = data;
 			const order = await PRISMA_CLIENT.order.create({
 				data: {
-                    ...orderData,
-                    orderDetails: {
-                        create: data.orderDetails.map((detail) => ({
-                        	quantity: detail.quantity,
-                            price: detail.price,
-                        	productId: detail.productId,
-                    	})),
-                	},
-            	},
+					...orderData,
+					orderDetails: {
+						create: data.orderDetails.map((detail) => ({
+							quantity: detail.quantity,
+							price: detail.price,
+							productId: detail.productId,
+						})),
+					},
+				},
 				include: {
 					orderDetails: true,
 				},
@@ -205,6 +204,5 @@ export const UserRepository: UserRepositoryContract = {
 			console.error("Error creating order:", error);
 			return null;
 		}
-	},	
-
+	},
 };

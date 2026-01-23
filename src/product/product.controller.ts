@@ -62,7 +62,7 @@ export const ProductController: ProductControllerContract = {
 					success: false,
 					message: errorMessage,
 				});
-				return
+				return;
 			}
 			const query = {
 				page: parsedPage,
@@ -90,7 +90,7 @@ export const ProductController: ProductControllerContract = {
 		try {
 			let parsedId = +req.params.id;
 			let errorMessage = "";
-			console.log(123123123)
+			console.log(123123123);
 			switch (true) {
 				case isNaN(parsedId) || parsedId < 1:
 					errorMessage = "Invalid id path parameter";
@@ -101,7 +101,7 @@ export const ProductController: ProductControllerContract = {
 					success: false,
 					message: errorMessage,
 				});
-				return
+				return;
 			}
 			let product = await ProductService.getById(parsedId);
 
@@ -147,7 +147,7 @@ export const ProductController: ProductControllerContract = {
 					success: false,
 					message: errorMessage,
 				});
-				return
+				return;
 			}
 
 			let product = await ProductService.create(req.body);
@@ -197,7 +197,7 @@ export const ProductController: ProductControllerContract = {
 					success: false,
 					message: errorMessage,
 				});
-				return
+				return;
 			}
 
 			let product = await ProductService.fullUpdate(req.body, parsedId);
@@ -243,25 +243,25 @@ export const ProductController: ProductControllerContract = {
 	},
 	suggestions: async (req, res) => {
 		try {
-			let { new: newPar, popular, offset, limit} = req.query;
-			let finallyQuery: string[] = []
+			let { new: newPar, popular, offset, limit } = req.query;
+			let finallyQuery: string[] = [];
 
-			if (newPar !== undefined){
-				console.log("new")
-				finallyQuery.push(newPar)
+			if (newPar !== undefined) {
+				console.log("new");
+				finallyQuery.push(newPar);
 			}
-			if (popular !== undefined ){
-				console.log("popular")
-				finallyQuery.push(popular)
+			if (popular !== undefined) {
+				console.log("popular");
+				finallyQuery.push(popular);
 			}
-			if (offset !== undefined ){
-				console.log("offset")
-				finallyQuery.push(offset)
+			if (offset !== undefined) {
+				console.log("offset");
+				finallyQuery.push(offset);
 			}
-			if (limit !== undefined ){
-				console.log("limit")
-				finallyQuery.push(limit)
-			} 
+			if (limit !== undefined) {
+				console.log("limit");
+				finallyQuery.push(limit);
+			}
 
 			let result = await ProductService.suggestions(...finallyQuery);
 
