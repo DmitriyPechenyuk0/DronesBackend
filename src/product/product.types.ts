@@ -145,7 +145,7 @@ export interface ProductControllerContract {
 		res: Response<ProductDeleteResponse | null>,
 	) => Promise<void>;
 	suggestions: (
-		req: Request<object, ProductGetAllResponse, object, { new: string, popular: string, offset: string, limit: string, perPage: string, page:string }>,
+		req: Request<object, ProductGetAllResponse, object, { new: string, popular: string, offset: string, limit: string}>,
 		res: Response<ProductGetAllResponse>,
 	) => Promise<void>;
 }
@@ -159,7 +159,7 @@ export interface ProductServiceContract {
 		id: number,
 	) => Promise<ProductFullUpdateResponse>;
 	delete: (id: number) => Promise<ProductDeleteResponse | null>;
-	suggestions: (newPar?: string, popular?: string, offset?: string, limit?: string, perPage?: string, page?: string) => Promise<ProductGetAllResponse>;
+	suggestions: (newPar?: string, popular?: string, offset?: string, limit?: string) => Promise<ProductGetAllResponse>;
 }
 
 export interface ProductRepositoryContract {

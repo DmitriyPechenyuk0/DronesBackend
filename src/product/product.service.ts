@@ -125,19 +125,17 @@ export const ProductService: ProductServiceContract = {
 			};
 		}
 	},
-	suggestions: async(newPar, popular, offset, limit, perPage, page) => {
+	suggestions: async(newPar, popular, offset, limit) => {
 		try {
 			const isNew = newPar?.toLowerCase() === 'true';
 			const isPopular = popular?.toLowerCase() === 'true';
 			const finalOffset = offset ? +offset : 0;
 			const finalLimit = limit ? +limit : 10;
-			const finalPerPage = perPage ? +perPage : 10;
-			const finalPage = page ? +page : 1;
 			
 			let result: Product[] | ProductErrorResponse
 			if (isNew){
 				result = await ProductRepository.getNew(finalOffset, finalLimit)
-
+				console.log(result)
 				if (Array.isArray(result)) {
 					return {
 						success: true,
@@ -150,6 +148,7 @@ export const ProductService: ProductServiceContract = {
 			}
 			if (isPopular){
 				result = await ProductRepository.getPopular(finalOffset, finalLimit)
+				console.log(result)
 				if (Array.isArray(result)) {
 					return {
 						success: true,

@@ -88,6 +88,7 @@ model Product {
   blocks       Block[]
   categoryId   Int
   category     Category      @relation(fields: [categoryId], references: [id])
+  name_trigrams String
 }
 
 model Category {

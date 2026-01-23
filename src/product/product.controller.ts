@@ -90,7 +90,7 @@ export const ProductController: ProductControllerContract = {
 		try {
 			let parsedId = +req.params.id;
 			let errorMessage = "";
-
+			console.log(123123123)
 			switch (true) {
 				case isNaN(parsedId) || parsedId < 1:
 					errorMessage = "Invalid id path parameter";
@@ -243,47 +243,26 @@ export const ProductController: ProductControllerContract = {
 	},
 	suggestions: async (req, res) => {
 		try {
-			let { new: newPar, popular, offset, limit, perPage, page } = req.query;
+			let { new: newPar, popular, offset, limit} = req.query;
 			let finallyQuery: string[] = []
 
-			let errorMessage: string | null = null;
-
-			switch (true) {
-				case newPar === undefined || typeof newPar !== "string" || (newPar.toLowerCase() !== 'false' && newPar.toLowerCase() !== 'true'):
-					errorMessage = "Invalid query parameter 'new' ";
-					break;
-				case popular === undefined || typeof popular !== "string" || popular.toLowerCase() !== 'false' && popular.toLowerCase() !== 'true':
-					errorMessage = "Invalid query parameter 'popular' ";
-					break;
-
-				case offset === undefined || typeof offset !== "string" || offset === "" || isNaN(+offset):
-					errorMessage = "Invalid query parameter 'offset' ";
-					break;
-
-				case limit === undefined || typeof limit !== "string" || limit === "" || isNaN(+limit):
-					errorMessage = "Invalid query parameter 'limit'";
-					break;
-
-				case perPage === undefined || typeof perPage !== "string" || perPage === "" || isNaN(+perPage):
-					errorMessage = "Invalid query parameter 'perPage'";
-					break;
-
-				case page === undefined || typeof page !== "string" || page === "" || isNaN(+page):
-					errorMessage = "Invalid query parameter 'page'";
-					break;
-				default:
-					break;
+			if (newPar !== undefined){
+				console.log("new")
+				finallyQuery.push(newPar)
 			}
-
-			if (errorMessage) {
-				res.status(400).json({
-					success: false,
-					message: errorMessage,
-				});
-				return
-			} else{
-				finallyQuery.push(newPar, popular, offset, limit, perPage, page)
+			if (popular !== undefined ){
+				console.log("popular")
+				finallyQuery.push(popular)
 			}
+			if (offset !== undefined ){
+				console.log("offset")
+				finallyQuery.push(offset)
+			}
+			if (limit !== undefined ){
+				console.log("limit")
+				finallyQuery.push(limit)
+			} 
+
 			let result = await ProductService.suggestions(...finallyQuery);
 
 			res.status(200).json(result);

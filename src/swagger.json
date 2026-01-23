@@ -1113,7 +1113,7 @@
       }
     },
     "/products/suggestions": {
-      "post": {
+      "get": {
         "tags": ["Products"],
         "summary": "Отримати список товарів за критеріями",
         "parameters": [
