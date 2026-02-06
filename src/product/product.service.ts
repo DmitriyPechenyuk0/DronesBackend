@@ -125,45 +125,32 @@ export const ProductService: ProductServiceContract = {
 			};
 		}
 	},
-	suggestions: async (newPar, popular, offset, limit) => {
+	suggestions: async (params) => {
 		try {
-			const isNew = newPar?.toLowerCase() === "true";
-			const isPopular = popular?.toLowerCase() === "true";
-			const finalOffset = offset ? +offset : 0;
-			const finalLimit = limit ? +limit : 10;
+			let { limit, offset, popular, new: isNew, sameAs } = params
 
-			let result: Product[] | ProductErrorResponse;
-			if (isNew) {
-				result = await ProductRepository.getNew(
-					finalOffset,
-					finalLimit,
-				);
-				console.log(result);
-				if (Array.isArray(result)) {
-					return {
-						success: true,
-						data: {
-							products: result,
-						},
-					};
-				}
-				return result;
+			limit = limit ?? 10;
+      		offset = offset ?? 0;	
+			
+			if (popular && isNew) {
+				return {
+					success: false,
+					message: "Parameters 'popular' and 'new' cannot be used together",
+				};
 			}
-			if (isPopular) {
-				result = await ProductRepository.getPopular(
-					finalOffset,
-					finalLimit,
-				);
-				console.log(result);
-				if (Array.isArray(result)) {
-					return {
-						success: true,
-						data: {
-							products: result,
-						},
-					};
-				}
-				return result;
+			let result: Product[] | ProductErrorResponse;
+			
+			if (sameAs) {
+				result = await ProductRepository.findSimilar(sameAs,offset, limit);
+			}
+			else if (popular) {
+				result = await ProductRepository.findPopular(offset, limit);
+			}
+			else if (isNew) {
+				result = await ProductRepository.findNew(offset, limit);
+			}
+			else {
+				result = await ProductRepository.getAll(offset, limit);
 			}
 			return {
 				success: false,

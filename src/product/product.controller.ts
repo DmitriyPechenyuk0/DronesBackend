@@ -1,7 +1,9 @@
 import { ProductService } from "./product.service";
 import {
 	ProductControllerContract,
+	ProductGetAllResponse,
 	ProductGetByIdSuccessResponse,
+	ProductSuggestionsParamsContract,
 } from "./product.types";
 
 export const ProductController: ProductControllerContract = {
@@ -243,27 +245,47 @@ export const ProductController: ProductControllerContract = {
 	},
 	suggestions: async (req, res) => {
 		try {
-			let { new: newPar, popular, offset, limit } = req.query;
-			let finallyQuery: string[] = [];
-
-			if (newPar !== undefined) {
-				console.log("new");
-				finallyQuery.push(newPar);
-			}
-			if (popular !== undefined) {
-				console.log("popular");
-				finallyQuery.push(popular);
-			}
-			if (offset !== undefined) {
-				console.log("offset");
-				finallyQuery.push(offset);
-			}
+			const { limit, offset, popular, new: isNew, sameAs } = req.query;
+			
+			const params: ProductSuggestionsParamsContract = {};
+			
 			if (limit !== undefined) {
-				console.log("limit");
-				finallyQuery.push(limit);
+				const parsedLimit = parseInt(limit, 10);
+				if (isNaN(parsedLimit) || parsedLimit < 0) {
+					res.status(400).json({ 
+						success: false,
+						message: 'Invalid limit parameter: must be a non-negative integer' 
+					});
+					return;
+				}
+				params.limit = parsedLimit;
 			}
 
-			let result = await ProductService.suggestions(...finallyQuery);
+			if (offset !== undefined) {
+				const parsedOffset = parseInt(offset, 10);
+				if (isNaN(parsedOffset) || parsedOffset < 0) {
+					res.status(400).json({ 
+						success: false,
+						message: 'Invalid offset parameter: must be a non-negative integer' 
+					});
+					return;
+				}
+				params.offset = parsedOffset;
+			}
+			
+			if (popular !== undefined) {
+				params.popular = popular === 'true' || popular === '1';
+			}
+			
+			if (isNew !== undefined) {
+				params.new = isNew === 'true' || isNew === '1';
+			}
+
+			if (sameAs !== undefined) {
+				params.sameAs = sameAs;
+			}
+
+			let result = await ProductService.suggestions(params);
 
 			res.status(200).json(result);
 		} catch (error) {

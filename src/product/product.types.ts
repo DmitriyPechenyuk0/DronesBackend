@@ -149,7 +149,7 @@ export interface ProductControllerContract {
 			object,
 			ProductGetAllResponse,
 			object,
-			{ new: string; popular: string; offset: string; limit: string }
+			ProductSuggestionsQueryContract
 		>,
 		res: Response<ProductGetAllResponse>,
 	) => Promise<void>;
@@ -165,10 +165,7 @@ export interface ProductServiceContract {
 	) => Promise<ProductFullUpdateResponse>;
 	delete: (id: number) => Promise<ProductDeleteResponse | null>;
 	suggestions: (
-		newPar?: string,
-		popular?: string,
-		offset?: string,
-		limit?: string,
+		params: ProductSuggestionsParamsContract
 	) => Promise<ProductGetAllResponse>;
 }
 
@@ -199,3 +196,19 @@ export interface ProductRepositoryContract {
 }
 
 export type ProductWhereInput = Prisma.ProductWhereInput;
+
+export interface ProductSuggestionsQueryContract {
+  limit?: string;
+  offset?: string;
+  popular?: string;
+  new?: string;
+  sameAs?: string;
+}
+
+export interface ProductSuggestionsParamsContract {
+  limit?: number;
+  offset?: number;
+  popular?: boolean;
+  new?: boolean;
+  sameAs?: string;
+}
