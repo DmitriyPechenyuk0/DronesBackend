@@ -214,7 +214,7 @@ export const ProductRepository: ProductRepositoryContract = {
 			});
 			const productIds = popular.map((p) => p.productId);
 
-			return await PRISMA_CLIENT.product.findMany({
+			let result = await PRISMA_CLIENT.product.findMany({
 				where: {
 					id: { in: productIds },
 				},
@@ -224,6 +224,12 @@ export const ProductRepository: ProductRepositoryContract = {
 				skip: offset || 0,
 				take: limit || 10,
 			});
+			return {
+				success: true,
+				data: {
+					products: result
+				}
+			}
 		} catch (error) {
 			console.log(error);
 			let result: ProductDeleteResponse = {
@@ -232,5 +238,23 @@ export const ProductRepository: ProductRepositoryContract = {
 			};
 			return result;
 		}
+	},
+	getSimilar: async(sameAs, offset, limit) => {
+		try {
+			
+			return {
+				success: true,
+				data: {
+					products: result
+				}
+			}
+		} catch (error) {
+			console.log(error);
+			let result: ProductDeleteResponse = {
+				success: false,
+				message: "Server Error",
+			};
+			return result;
+		}		
 	},
 };

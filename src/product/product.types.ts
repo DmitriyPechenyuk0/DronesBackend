@@ -193,6 +193,11 @@ export interface ProductRepositoryContract {
 		offset?: number,
 		limit?: number,
 	) => Promise<Product[] | ProductErrorResponse>;
+	getSimilar: (
+		sameAs: number,
+		offset?: number,
+		limit?: number
+	) => Promise<Product[] | ProductErrorResponse>
 }
 
 export type ProductWhereInput = Prisma.ProductWhereInput;

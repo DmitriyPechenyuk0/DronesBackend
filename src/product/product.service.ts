@@ -11,6 +11,32 @@ import {
 } from "./product.types";
 import { DuplicateError } from "./errors";
 
+export function generateTrigrams(text: string): string[] {
+	const normalized = text.toLowerCase().trim().replace(/\s+/g, ' ');
+	const padded = `  ${normalized} `;
+	const trigrams: string[] = [];
+
+	for (let i = 0; i < padded.length - 2; i++) {
+		trigrams.push(padded.slice(i, i + 3));
+	}
+
+	return trigrams;
+}
+
+export function prepareTrigramsForDB(text: string): string {
+	return generateTrigrams(text).join(',');
+}
+
+export function calculateSimilarity(trigrams1: string[], trigrams2: string[]): number {
+  const set1 = new Set(trigrams1);
+  const set2 = new Set(trigrams2);
+  
+  const intersection = new Set([...set1].filter(x => set2.has(x)));
+  const union = new Set([...set1, ...set2]);
+  
+  return union.size === 0 ? 0 : intersection.size / union.size;
+}
+
 export const ProductService: ProductServiceContract = {
 	getAll: async (query) => {
 		try {
@@ -139,22 +165,22 @@ export const ProductService: ProductServiceContract = {
 				};
 			}
 			let result: Product[] | ProductErrorResponse;
-			
+
 			if (sameAs) {
-				result = await ProductRepository.findSimilar(sameAs,offset, limit);
+				result = await ProductRepository.getSimilar(+sameAs, offset, limit);
 			}
 			else if (popular) {
-				result = await ProductRepository.findPopular(offset, limit);
+				result = await ProductRepository.getPopular(offset, limit);
 			}
 			else if (isNew) {
-				result = await ProductRepository.findNew(offset, limit);
+				result = await ProductRepository.getNew(offset, limit);
 			}
 			else {
 				result = await ProductRepository.getAll(offset, limit);
 			}
 			return {
-				success: false,
-				message: "Choose one of query parameters",
+				success: true,
+				data: {products: result}
 			};
 		} catch (error) {
 			console.log(error);
