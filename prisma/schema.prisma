@@ -89,6 +89,7 @@ model Product {
   categoryId   Int
   category     Category      @relation(fields: [categoryId], references: [id])
   name_trigrams String
+  image String
 }
 
 model Category {

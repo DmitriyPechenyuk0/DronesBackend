@@ -78,7 +78,7 @@ export const ProductRepository: ProductRepositoryContract = {
 			if (!categoryExists) {
 				throw new Error(`category not found`);
 			}
-
+				
 			return PRISMA_CLIENT.product.create({
 				data: {
 					name,
