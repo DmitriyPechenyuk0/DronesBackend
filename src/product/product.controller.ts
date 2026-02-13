@@ -118,7 +118,7 @@ export const ProductController: ProductControllerContract = {
 	},
 	create: async (req, res) => {
 		try {
-			let { name, price, discount, category_id, blocks, amount, image} =
+			let { name, price, discount, category_id, blocks, amount, image } =
 				req.body;
 			let errorMessage: string | null = null;
 			switch (true) {
@@ -249,15 +249,16 @@ export const ProductController: ProductControllerContract = {
 	suggestions: async (req, res) => {
 		try {
 			const { limit, offset, popular, new: isNew, sameAs } = req.query;
-			
+
 			const params: ProductSuggestionsParamsContract = {};
-			
+
 			if (limit !== undefined) {
 				const parsedLimit = parseInt(limit, 10);
 				if (isNaN(parsedLimit) || parsedLimit < 0) {
-					res.status(400).json({ 
+					res.status(400).json({
 						success: false,
-						message: 'Invalid limit parameter: must be a non-negative integer' 
+						message:
+							"Invalid limit parameter: must be a non-negative integer",
 					});
 					return;
 				}
@@ -267,21 +268,22 @@ export const ProductController: ProductControllerContract = {
 			if (offset !== undefined) {
 				const parsedOffset = parseInt(offset, 10);
 				if (isNaN(parsedOffset) || parsedOffset < 0) {
-					res.status(400).json({ 
+					res.status(400).json({
 						success: false,
-						message: 'Invalid offset parameter: must be a non-negative integer' 
+						message:
+							"Invalid offset parameter: must be a non-negative integer",
 					});
 					return;
 				}
 				params.offset = parsedOffset;
 			}
-			
+
 			if (popular !== undefined) {
-				params.popular = popular === 'true' || popular === '1';
+				params.popular = popular === "true" || popular === "1";
 			}
-			
+
 			if (isNew !== undefined) {
-				params.new = isNew === 'true' || isNew === '1';
+				params.new = isNew === "true" || isNew === "1";
 			}
 
 			if (sameAs !== undefined) {

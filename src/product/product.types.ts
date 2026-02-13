@@ -160,14 +160,16 @@ export interface ProductControllerContract {
 export interface ProductServiceContract {
 	getAll: (query: ProductGetAllQueryParsed) => Promise<ProductGetAllResponse>;
 	getById: (id: number) => Promise<ProductGetByIdResponse>;
-	create: (query: Omit<ProductCreateBody, 'name_trigrams'>) => Promise<ProductCreateResponse>;
+	create: (
+		query: Omit<ProductCreateBody, "name_trigrams">,
+	) => Promise<ProductCreateResponse>;
 	fullUpdate: (
 		query: ProductFullUpdateBody,
 		id: number,
 	) => Promise<ProductFullUpdateResponse>;
 	delete: (id: number) => Promise<ProductDeleteResponse | null>;
 	suggestions: (
-		params: ProductSuggestionsParamsContract
+		params: ProductSuggestionsParamsContract,
 	) => Promise<ProductGetAllResponse>;
 }
 
@@ -198,24 +200,24 @@ export interface ProductRepositoryContract {
 	getSimilar: (
 		sameAs: number,
 		offset?: number,
-		limit?: number
-	) => Promise<Product[] | ProductErrorResponse>
+		limit?: number,
+	) => Promise<Product[] | ProductErrorResponse>;
 }
 
 export type ProductWhereInput = Prisma.ProductWhereInput;
 
 export interface ProductSuggestionsQueryContract {
-  limit?: string;
-  offset?: string;
-  popular?: string;
-  new?: string;
-  sameAs?: string;
+	limit?: string;
+	offset?: string;
+	popular?: string;
+	new?: string;
+	sameAs?: string;
 }
 
 export interface ProductSuggestionsParamsContract {
-  limit?: number;
-  offset?: number;
-  popular?: boolean;
-  new?: boolean;
-  sameAs?: string;
+	limit?: number;
+	offset?: number;
+	popular?: boolean;
+	new?: boolean;
+	sameAs?: string;
 }

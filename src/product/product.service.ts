@@ -11,10 +11,10 @@ import {
 } from "./product.types";
 import { DuplicateError } from "./errors";
 
-const SIMILARITY_THRESHOLD = 0.5
+const SIMILARITY_THRESHOLD = 0.5;
 
 export function generateTrigrams(text: string): string[] {
-	const normalized = text.toLowerCase().trim().replace(/\s+/g, ' ');
+	const normalized = text.toLowerCase().trim().replace(/\s+/g, " ");
 	const padded = `  ${normalized} `;
 	const trigrams: string[] = [];
 
@@ -26,17 +26,20 @@ export function generateTrigrams(text: string): string[] {
 }
 
 export function prepareTrigramsForDB(text: string): string {
-	return generateTrigrams(text).join(',');
+	return generateTrigrams(text).join(",");
 }
 
-export function calculateSimilarity(trigrams1: string[], trigrams2: string[]): number {
-  const set1 = new Set(trigrams1);
-  const set2 = new Set(trigrams2);
-  
-  const intersection = new Set([...set1].filter(x => set2.has(x)));
-  const union = new Set([...set1, ...set2]);
-  
-  return union.size === 0 ? 0 : intersection.size / union.size;
+export function calculateSimilarity(
+	trigrams1: string[],
+	trigrams2: string[],
+): number {
+	const set1 = new Set(trigrams1);
+	const set2 = new Set(trigrams2);
+
+	const intersection = new Set([...set1].filter((x) => set2.has(x)));
+	const union = new Set([...set1, ...set2]);
+
+	return union.size === 0 ? 0 : intersection.size / union.size;
 }
 
 export const ProductService: ProductServiceContract = {
@@ -97,8 +100,8 @@ export const ProductService: ProductServiceContract = {
 	},
 	create: async (product) => {
 		try {
-			let trigrams = generateTrigrams(product.name)
-			let query = {...product, }
+			let trigrams = generateTrigrams(product.name);
+			let query = { ...product };
 			const createdProduct = await ProductRepository.create(query);
 
 			const response: ProductGetByIdSuccessResponse = {
@@ -157,60 +160,71 @@ export const ProductService: ProductServiceContract = {
 	},
 	suggestions: async (params) => {
 		try {
-			let { limit, offset, popular, new: isNew, sameAs } = params
+			let { limit, offset, popular, new: isNew, sameAs } = params;
 
 			limit = limit ?? 10;
-      		offset = offset ?? 0;	
-			
+			offset = offset ?? 0;
+
 			if (popular && isNew) {
 				return {
 					success: false,
-					message: "Parameters 'popular' and 'new' cannot be used together",
+					message:
+						"Parameters 'popular' and 'new' cannot be used together",
 				};
 			}
 			let result: Product[];
- 
+
 			if (sameAs) {
-				let products = await ProductRepository.getAll(+sameAs, offset, limit);
+				let products = await ProductRepository.getAll(
+					+sameAs,
+					offset,
+					limit,
+				);
 				let sameAsProduct = await ProductRepository.getById(+sameAs);
 				if (!sameAsProduct || !sameAsProduct.name_trigrams) {
 					return {
 						success: false,
-						message: 'sameAs product was not found'
-					}
+						message: "sameAs product was not found",
+					};
 				}
-				let sameAsTrigrams = sameAsProduct.name_trigrams.split(',');
+				let sameAsTrigrams = sameAsProduct.name_trigrams.split(",");
 
-				let similarProducts = products.filter(product => {
+				let similarProducts = products.filter((product) => {
 					if (!product.name_trigrams) {
 						return false;
 					}
-					
-					const productTrigrams = product.name_trigrams.split(',');
-					const similarity = calculateSimilarity(sameAsTrigrams, productTrigrams);
-					
+
+					const productTrigrams = product.name_trigrams.split(",");
+					const similarity = calculateSimilarity(
+						sameAsTrigrams,
+						productTrigrams,
+					);
+
 					return similarity >= SIMILARITY_THRESHOLD;
 				});
 				similarProducts.sort((a, b) => {
-					const similarityA = calculateSimilarity(sameAsTrigrams, a.name_trigrams.split(','));
-					const similarityB = calculateSimilarity(sameAsTrigrams, b.name_trigrams.split(','));
+					const similarityA = calculateSimilarity(
+						sameAsTrigrams,
+						a.name_trigrams.split(","),
+					);
+					const similarityB = calculateSimilarity(
+						sameAsTrigrams,
+						b.name_trigrams.split(","),
+					);
 					return similarityB - similarityA;
 				});
-				console.log(similarProducts)
-				result = similarProducts
-			}
-			else if (popular) {
+				console.log(similarProducts);
+				result = similarProducts;
+			} else if (popular) {
 				result = await ProductRepository.getPopular(offset, limit);
-			}
-			else if (isNew) {
+			} else if (isNew) {
 				result = await ProductRepository.getNew(offset, limit);
-			}
-			else {
+			} else {
 				result = await ProductRepository.getAll(offset, limit);
 			}
 			return {
 				success: true,
-				data: {products: result}
+				data: { products: result },
 			};
 		} catch (error) {
 			console.log(error);

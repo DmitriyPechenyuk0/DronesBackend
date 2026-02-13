@@ -420,7 +420,7 @@ export const UserController: UserControllerContract = {
 				});
 			}
 			const getOrderStatus = await userService.orderStatus(orders);
-			res.json(getOrderStatus)
+			res.json(getOrderStatus);
 		} catch (error) {
 			console.log(error);
 			res.json({

@@ -66,8 +66,16 @@ export const ProductRepository: ProductRepositoryContract = {
 	},
 	create: async (product) => {
 		try {
-			let { name, price, discount, category_id, blocks, amount, name_trigrams, image } =
-				product;
+			let {
+				name,
+				price,
+				discount,
+				category_id,
+				blocks,
+				amount,
+				name_trigrams,
+				image,
+			} = product;
 
 			const blocksPrismaFormat = mapBlocksToPrismaCreate(blocks);
 
@@ -78,7 +86,7 @@ export const ProductRepository: ProductRepositoryContract = {
 			if (!categoryExists) {
 				throw new Error(`category not found`);
 			}
-				
+
 			return PRISMA_CLIENT.product.create({
 				data: {
 					name,
@@ -228,9 +236,9 @@ export const ProductRepository: ProductRepositoryContract = {
 			return {
 				success: true,
 				data: {
-					products: result
-				}
-			}
+					products: result,
+				},
+			};
 		} catch (error) {
 			console.log(error);
 			let result: ProductDeleteResponse = {
@@ -240,5 +248,4 @@ export const ProductRepository: ProductRepositoryContract = {
 			return result;
 		}
 	},
-
 };
