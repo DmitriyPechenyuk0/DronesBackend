@@ -176,12 +176,16 @@ export const ProductService: ProductServiceContract = {
 			let result: Product[];
 
 			if (sameAs) {
-				let products = await ProductRepository.getAll(+sameAs, offset, limit);
-				
+				let products = await ProductRepository.getAll(
+					+sameAs,
+					offset,
+					limit,
+				);
+
 				if (!Array.isArray(products)) {
 					return products;
 				}
-				
+
 				let sameAsProduct = await ProductRepository.getById(+sameAs);
 				if (!sameAsProduct || !sameAsProduct.name_trigrams) {
 					return {
@@ -189,7 +193,7 @@ export const ProductService: ProductServiceContract = {
 						message: "sameAs product was not found",
 					};
 				}
-				
+
 				let sameAsTrigrams = sameAsProduct.name_trigrams.split(",");
 				const targetPrice = sameAsProduct.price;
 				const targetCategory = sameAsProduct.categoryId;
@@ -197,15 +201,25 @@ export const ProductService: ProductServiceContract = {
 				let similarByName = products
 					.filter((product) => {
 						if (!product.name_trigrams) return false;
-						
-						const productTrigrams = product.name_trigrams.split(",");
-						const similarity = calculateSimilarity(sameAsTrigrams, productTrigrams);
-						
+
+						const productTrigrams =
+							product.name_trigrams.split(",");
+						const similarity = calculateSimilarity(
+							sameAsTrigrams,
+							productTrigrams,
+						);
+
 						return similarity >= SIMILARITY_THRESHOLD;
 					})
 					.sort((a, b) => {
-						const similarityA = calculateSimilarity(sameAsTrigrams, a.name_trigrams!.split(","));
-						const similarityB = calculateSimilarity(sameAsTrigrams, b.name_trigrams!.split(","));
+						const similarityA = calculateSimilarity(
+							sameAsTrigrams,
+							a.name_trigrams!.split(","),
+						);
+						const similarityB = calculateSimilarity(
+							sameAsTrigrams,
+							b.name_trigrams!.split(","),
+						);
 						return similarityB - similarityA;
 					});
 
@@ -215,8 +229,13 @@ export const ProductService: ProductServiceContract = {
 					let remainingLimit = limit - similarByName.length;
 					let similarByCategory = products
 						.filter((product) => {
-							const alreadyAdded = similarByName.some(p => p.id === product.id);
-							return !alreadyAdded && product.categoryId === targetCategory;
+							const alreadyAdded = similarByName.some(
+								(p) => p.id === product.id,
+							);
+							return (
+								!alreadyAdded &&
+								product.categoryId === targetCategory
+							);
 						})
 						.slice(0, remainingLimit);
 
@@ -227,19 +246,27 @@ export const ProductService: ProductServiceContract = {
 						remainingLimit = limit - combined.length;
 						let similarByPrice = products
 							.filter((product) => {
-								const alreadyAdded = combined.some(p => p.id === product.id);
-								const isInPriceRange = Math.abs(product.price - targetPrice) <= PRICE_DELTA;
+								const alreadyAdded = combined.some(
+									(p) => p.id === product.id,
+								);
+								const isInPriceRange =
+									Math.abs(product.price - targetPrice) <=
+									PRICE_DELTA;
 								return !alreadyAdded && isInPriceRange;
 							})
 							.sort((a, b) => {
-								const priceDiffA = Math.abs(a.price - targetPrice);
-								const priceDiffB = Math.abs(b.price - targetPrice);
+								const priceDiffA = Math.abs(
+									a.price - targetPrice,
+								);
+								const priceDiffB = Math.abs(
+									b.price - targetPrice,
+								);
 								return priceDiffA - priceDiffB;
 							})
 							.slice(0, remainingLimit);
 						result = [...combined, ...similarByPrice];
 					}
-				console.log(result);
+					console.log(result);
 				}
 			} else if (popular) {
 				result = await ProductRepository.getPopular(offset, limit);
