@@ -12,6 +12,7 @@ import {
 import { DuplicateError } from "./errors";
 
 const SIMILARITY_THRESHOLD = 0.5;
+const PRICE_DELTA = 500;
 
 export function generateTrigrams(text: string): string[] {
 	const normalized = text.toLowerCase().trim().replace(/\s+/g, " ");
@@ -175,11 +176,12 @@ export const ProductService: ProductServiceContract = {
 			let result: Product[];
 
 			if (sameAs) {
-				let products = await ProductRepository.getAll(
-					+sameAs,
-					offset,
-					limit,
-				);
+				let products = await ProductRepository.getAll(+sameAs, offset, limit);
+				
+				if (!Array.isArray(products)) {
+					return products;
+				}
+				
 				let sameAsProduct = await ProductRepository.getById(+sameAs);
 				if (!sameAsProduct || !sameAsProduct.name_trigrams) {
 					return {
@@ -187,34 +189,58 @@ export const ProductService: ProductServiceContract = {
 						message: "sameAs product was not found",
 					};
 				}
+				
 				let sameAsTrigrams = sameAsProduct.name_trigrams.split(",");
+				const targetPrice = sameAsProduct.price;
+				const targetCategory = sameAsProduct.categoryId;
 
-				let similarProducts = products.filter((product) => {
-					if (!product.name_trigrams) {
-						return false;
+				let similarByName = products
+					.filter((product) => {
+						if (!product.name_trigrams) return false;
+						
+						const productTrigrams = product.name_trigrams.split(",");
+						const similarity = calculateSimilarity(sameAsTrigrams, productTrigrams);
+						
+						return similarity >= SIMILARITY_THRESHOLD;
+					})
+					.sort((a, b) => {
+						const similarityA = calculateSimilarity(sameAsTrigrams, a.name_trigrams!.split(","));
+						const similarityB = calculateSimilarity(sameAsTrigrams, b.name_trigrams!.split(","));
+						return similarityB - similarityA;
+					});
+
+				if (similarByName.length >= limit) {
+					result = similarByName.slice(0, limit);
+				} else {
+					let remainingLimit = limit - similarByName.length;
+					let similarByCategory = products
+						.filter((product) => {
+							const alreadyAdded = similarByName.some(p => p.id === product.id);
+							return !alreadyAdded && product.categoryId === targetCategory;
+						})
+						.slice(0, remainingLimit);
+
+					let combined = [...similarByName, ...similarByCategory];
+					if (combined.length >= limit) {
+						result = combined.slice(0, limit);
+					} else {
+						remainingLimit = limit - combined.length;
+						let similarByPrice = products
+							.filter((product) => {
+								const alreadyAdded = combined.some(p => p.id === product.id);
+								const isInPriceRange = Math.abs(product.price - targetPrice) <= PRICE_DELTA;
+								return !alreadyAdded && isInPriceRange;
+							})
+							.sort((a, b) => {
+								const priceDiffA = Math.abs(a.price - targetPrice);
+								const priceDiffB = Math.abs(b.price - targetPrice);
+								return priceDiffA - priceDiffB;
+							})
+							.slice(0, remainingLimit);
+						result = [...combined, ...similarByPrice];
 					}
-
-					const productTrigrams = product.name_trigrams.split(",");
-					const similarity = calculateSimilarity(
-						sameAsTrigrams,
-						productTrigrams,
-					);
-
-					return similarity >= SIMILARITY_THRESHOLD;
-				});
-				similarProducts.sort((a, b) => {
-					const similarityA = calculateSimilarity(
-						sameAsTrigrams,
-						a.name_trigrams.split(","),
-					);
-					const similarityB = calculateSimilarity(
-						sameAsTrigrams,
-						b.name_trigrams.split(","),
-					);
-					return similarityB - similarityA;
-				});
-				console.log(similarProducts);
-				result = similarProducts;
+				console.log(result);
+				}
 			} else if (popular) {
 				result = await ProductRepository.getPopular(offset, limit);
 			} else if (isNew) {
