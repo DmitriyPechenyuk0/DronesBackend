@@ -6489,6 +6489,8 @@ export namespace Prisma {
     amount: number | null
     price: number | null
     categoryId: number | null
+    name_trigrams: string | null
+    image: string | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -6498,6 +6500,8 @@ export namespace Prisma {
     amount: number | null
     price: number | null
     categoryId: number | null
+    name_trigrams: string | null
+    image: string | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -6507,6 +6511,8 @@ export namespace Prisma {
     amount: number
     price: number
     categoryId: number
+    name_trigrams: number
+    image: number
     _all: number
   }
 
@@ -6534,6 +6540,8 @@ export namespace Prisma {
     amount?: true
     price?: true
     categoryId?: true
+    name_trigrams?: true
+    image?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -6543,6 +6551,8 @@ export namespace Prisma {
     amount?: true
     price?: true
     categoryId?: true
+    name_trigrams?: true
+    image?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -6552,6 +6562,8 @@ export namespace Prisma {
     amount?: true
     price?: true
     categoryId?: true
+    name_trigrams?: true
+    image?: true
     _all?: true
   }
 
@@ -6648,6 +6660,8 @@ export namespace Prisma {
     amount: number
     price: number
     categoryId: number
+    name_trigrams: string
+    image: string
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -6676,6 +6690,8 @@ export namespace Prisma {
     amount?: boolean
     price?: boolean
     categoryId?: boolean
+    name_trigrams?: boolean
+    image?: boolean
     orderDetails?: boolean | Product$orderDetailsArgs<ExtArgs>
     blocks?: boolean | Product$blocksArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -6689,6 +6705,8 @@ export namespace Prisma {
     amount?: boolean
     price?: boolean
     categoryId?: boolean
+    name_trigrams?: boolean
+    image?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -6699,6 +6717,8 @@ export namespace Prisma {
     amount?: boolean
     price?: boolean
     categoryId?: boolean
+    name_trigrams?: boolean
+    image?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -6709,9 +6729,11 @@ export namespace Prisma {
     amount?: boolean
     price?: boolean
     categoryId?: boolean
+    name_trigrams?: boolean
+    image?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "discount" | "name" | "amount" | "price" | "categoryId", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "discount" | "name" | "amount" | "price" | "categoryId" | "name_trigrams" | "image", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderDetails?: boolean | Product$orderDetailsArgs<ExtArgs>
     blocks?: boolean | Product$blocksArgs<ExtArgs>
@@ -6739,6 +6761,8 @@ export namespace Prisma {
       amount: number
       price: number
       categoryId: number
+      name_trigrams: string
+      image: string
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -7171,6 +7195,8 @@ export namespace Prisma {
     readonly amount: FieldRef<"Product", 'Int'>
     readonly price: FieldRef<"Product", 'Float'>
     readonly categoryId: FieldRef<"Product", 'Int'>
+    readonly name_trigrams: FieldRef<"Product", 'String'>
+    readonly image: FieldRef<"Product", 'String'>
   }
     
 
@@ -11009,7 +11035,9 @@ export namespace Prisma {
     name: 'name',
     amount: 'amount',
     price: 'price',
-    categoryId: 'categoryId'
+    categoryId: 'categoryId',
+    name_trigrams: 'name_trigrams',
+    image: 'image'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -11436,6 +11464,8 @@ export namespace Prisma {
     amount?: IntFilter<"Product"> | number
     price?: FloatFilter<"Product"> | number
     categoryId?: IntFilter<"Product"> | number
+    name_trigrams?: StringFilter<"Product"> | string
+    image?: StringFilter<"Product"> | string
     orderDetails?: OrderDetailListRelationFilter
     blocks?: BlockListRelationFilter
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -11448,6 +11478,8 @@ export namespace Prisma {
     amount?: SortOrder
     price?: SortOrder
     categoryId?: SortOrder
+    name_trigrams?: SortOrder
+    image?: SortOrder
     orderDetails?: OrderDetailOrderByRelationAggregateInput
     blocks?: BlockOrderByRelationAggregateInput
     category?: CategoryOrderByWithRelationInput
@@ -11463,6 +11495,8 @@ export namespace Prisma {
     amount?: IntFilter<"Product"> | number
     price?: FloatFilter<"Product"> | number
     categoryId?: IntFilter<"Product"> | number
+    name_trigrams?: StringFilter<"Product"> | string
+    image?: StringFilter<"Product"> | string
     orderDetails?: OrderDetailListRelationFilter
     blocks?: BlockListRelationFilter
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -11475,6 +11509,8 @@ export namespace Prisma {
     amount?: SortOrder
     price?: SortOrder
     categoryId?: SortOrder
+    name_trigrams?: SortOrder
+    image?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -11492,6 +11528,8 @@ export namespace Prisma {
     amount?: IntWithAggregatesFilter<"Product"> | number
     price?: FloatWithAggregatesFilter<"Product"> | number
     categoryId?: IntWithAggregatesFilter<"Product"> | number
+    name_trigrams?: StringWithAggregatesFilter<"Product"> | string
+    image?: StringWithAggregatesFilter<"Product"> | string
   }
 
   export type CategoryWhereInput = {
@@ -12000,6 +12038,8 @@ export namespace Prisma {
     name: string
     amount: number
     price: number
+    name_trigrams: string
+    image: string
     orderDetails?: OrderDetailCreateNestedManyWithoutProductInput
     blocks?: BlockCreateNestedManyWithoutProductInput
     category: CategoryCreateNestedOneWithoutProductsInput
@@ -12012,6 +12052,8 @@ export namespace Prisma {
     amount: number
     price: number
     categoryId: number
+    name_trigrams: string
+    image: string
     orderDetails?: OrderDetailUncheckedCreateNestedManyWithoutProductInput
     blocks?: BlockUncheckedCreateNestedManyWithoutProductInput
   }
@@ -12021,6 +12063,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     orderDetails?: OrderDetailUpdateManyWithoutProductNestedInput
     blocks?: BlockUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
@@ -12033,6 +12077,8 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     orderDetails?: OrderDetailUncheckedUpdateManyWithoutProductNestedInput
     blocks?: BlockUncheckedUpdateManyWithoutProductNestedInput
   }
@@ -12044,6 +12090,8 @@ export namespace Prisma {
     amount: number
     price: number
     categoryId: number
+    name_trigrams: string
+    image: string
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -12051,6 +12099,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -12060,6 +12110,8 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
   }
 
   export type CategoryCreateInput = {
@@ -12669,6 +12721,8 @@ export namespace Prisma {
     amount?: SortOrder
     price?: SortOrder
     categoryId?: SortOrder
+    name_trigrams?: SortOrder
+    image?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -12686,6 +12740,8 @@ export namespace Prisma {
     amount?: SortOrder
     price?: SortOrder
     categoryId?: SortOrder
+    name_trigrams?: SortOrder
+    image?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -12695,6 +12751,8 @@ export namespace Prisma {
     amount?: SortOrder
     price?: SortOrder
     categoryId?: SortOrder
+    name_trigrams?: SortOrder
+    image?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
@@ -14014,6 +14072,8 @@ export namespace Prisma {
     name: string
     amount: number
     price: number
+    name_trigrams: string
+    image: string
     blocks?: BlockCreateNestedManyWithoutProductInput
     category: CategoryCreateNestedOneWithoutProductsInput
   }
@@ -14025,6 +14085,8 @@ export namespace Prisma {
     amount: number
     price: number
     categoryId: number
+    name_trigrams: string
+    image: string
     blocks?: BlockUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -14095,6 +14157,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     blocks?: BlockUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
   }
@@ -14106,6 +14170,8 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     blocks?: BlockUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -14241,6 +14307,8 @@ export namespace Prisma {
     name: string
     amount: number
     price: number
+    name_trigrams: string
+    image: string
     orderDetails?: OrderDetailCreateNestedManyWithoutProductInput
     blocks?: BlockCreateNestedManyWithoutProductInput
   }
@@ -14251,6 +14319,8 @@ export namespace Prisma {
     name: string
     amount: number
     price: number
+    name_trigrams: string
+    image: string
     orderDetails?: OrderDetailUncheckedCreateNestedManyWithoutProductInput
     blocks?: BlockUncheckedCreateNestedManyWithoutProductInput
   }
@@ -14290,6 +14360,8 @@ export namespace Prisma {
     amount?: IntFilter<"Product"> | number
     price?: FloatFilter<"Product"> | number
     categoryId?: IntFilter<"Product"> | number
+    name_trigrams?: StringFilter<"Product"> | string
+    image?: StringFilter<"Product"> | string
   }
 
   export type ProductCreateWithoutBlocksInput = {
@@ -14297,6 +14369,8 @@ export namespace Prisma {
     name: string
     amount: number
     price: number
+    name_trigrams: string
+    image: string
     orderDetails?: OrderDetailCreateNestedManyWithoutProductInput
     category: CategoryCreateNestedOneWithoutProductsInput
   }
@@ -14308,6 +14382,8 @@ export namespace Prisma {
     amount: number
     price: number
     categoryId: number
+    name_trigrams: string
+    image: string
     orderDetails?: OrderDetailUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -14352,6 +14428,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     orderDetails?: OrderDetailUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
   }
@@ -14363,6 +14441,8 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     orderDetails?: OrderDetailUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -14702,6 +14782,8 @@ export namespace Prisma {
     name: string
     amount: number
     price: number
+    name_trigrams: string
+    image: string
   }
 
   export type ProductUpdateWithoutCategoryInput = {
@@ -14709,6 +14791,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     orderDetails?: OrderDetailUpdateManyWithoutProductNestedInput
     blocks?: BlockUpdateManyWithoutProductNestedInput
   }
@@ -14719,6 +14803,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
     orderDetails?: OrderDetailUncheckedUpdateManyWithoutProductNestedInput
     blocks?: BlockUncheckedUpdateManyWithoutProductNestedInput
   }
@@ -14729,6 +14815,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
+    name_trigrams?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
   }
 
   export type TechDetailCreateManyBlockInput = {

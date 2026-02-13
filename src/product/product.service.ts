@@ -11,6 +11,8 @@ import {
 } from "./product.types";
 import { DuplicateError } from "./errors";
 
+const SIMILARITY_THRESHOLD = 0.5
+
 export function generateTrigrams(text: string): string[] {
 	const normalized = text.toLowerCase().trim().replace(/\s+/g, ' ');
 	const padded = `  ${normalized} `;
@@ -95,7 +97,9 @@ export const ProductService: ProductServiceContract = {
 	},
 	create: async (product) => {
 		try {
-			const createdProduct = await ProductRepository.create(product);
+			let trigrams = generateTrigrams(product.name)
+			let query = {...product, }
+			const createdProduct = await ProductRepository.create(query);
 
 			const response: ProductGetByIdSuccessResponse = {
 				success: true,
@@ -164,10 +168,36 @@ export const ProductService: ProductServiceContract = {
 					message: "Parameters 'popular' and 'new' cannot be used together",
 				};
 			}
-			let result: Product[] | ProductErrorResponse;
-
+			let result: Product[];
+ 
 			if (sameAs) {
-				result = await ProductRepository.getSimilar(+sameAs, offset, limit);
+				let products = await ProductRepository.getAll(+sameAs, offset, limit);
+				let sameAsProduct = await ProductRepository.getById(+sameAs);
+				if (!sameAsProduct || !sameAsProduct.name_trigrams) {
+					return {
+						success: false,
+						message: 'sameAs product was not found'
+					}
+				}
+				let sameAsTrigrams = sameAsProduct.name_trigrams.split(',');
+
+				let similarProducts = products.filter(product => {
+					if (!product.name_trigrams) {
+						return false;
+					}
+					
+					const productTrigrams = product.name_trigrams.split(',');
+					const similarity = calculateSimilarity(sameAsTrigrams, productTrigrams);
+					
+					return similarity >= SIMILARITY_THRESHOLD;
+				});
+				similarProducts.sort((a, b) => {
+					const similarityA = calculateSimilarity(sameAsTrigrams, a.name_trigrams.split(','));
+					const similarityB = calculateSimilarity(sameAsTrigrams, b.name_trigrams.split(','));
+					return similarityB - similarityA;
+				});
+				console.log(similarProducts)
+				result = similarProducts
 			}
 			else if (popular) {
 				result = await ProductRepository.getPopular(offset, limit);

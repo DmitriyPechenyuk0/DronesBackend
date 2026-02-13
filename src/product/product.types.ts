@@ -34,6 +34,8 @@ export interface ProductCreateBody {
 	discount: number;
 	category_id: number;
 	amount: number;
+	image: string;
+	name_trigrams: string;
 	blocks: ProductBlock[];
 }
 export interface ProductGetAllSuccessResponse {
@@ -158,7 +160,7 @@ export interface ProductControllerContract {
 export interface ProductServiceContract {
 	getAll: (query: ProductGetAllQueryParsed) => Promise<ProductGetAllResponse>;
 	getById: (id: number) => Promise<ProductGetByIdResponse>;
-	create: (query: ProductCreateBody) => Promise<ProductCreateResponse>;
+	create: (query: Omit<ProductCreateBody, 'name_trigrams'>) => Promise<ProductCreateResponse>;
 	fullUpdate: (
 		query: ProductFullUpdateBody,
 		id: number,

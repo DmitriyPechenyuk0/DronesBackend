@@ -79,15 +79,17 @@ model OrderDetail {
 }
 
 model Product {
-  id           Int           @id @default(autoincrement())
-  discount     Float?
-  name         String
-  amount       Int
-  price        Float
-  orderDetails OrderDetail[]
-  blocks       Block[]
-  categoryId   Int
-  category     Category      @relation(fields: [categoryId], references: [id])
+  id            Int           @id @default(autoincrement())
+  discount      Float?
+  name          String
+  amount        Int
+  price         Float
+  orderDetails  OrderDetail[]
+  blocks        Block[]
+  categoryId    Int
+  category      Category      @relation(fields: [categoryId], references: [id])
+  name_trigrams String
+  image         String
 }
 
 model Category {

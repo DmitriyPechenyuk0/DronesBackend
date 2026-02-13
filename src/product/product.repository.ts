@@ -66,7 +66,7 @@ export const ProductRepository: ProductRepositoryContract = {
 	},
 	create: async (product) => {
 		try {
-			let { name, price, discount, category_id, blocks, amount } =
+			let { name, price, discount, category_id, blocks, amount, name_trigrams, image } =
 				product;
 
 			const blocksPrismaFormat = mapBlocksToPrismaCreate(blocks);
@@ -85,7 +85,8 @@ export const ProductRepository: ProductRepositoryContract = {
 					price,
 					discount,
 					amount,
-
+					name_trigrams,
+					image,
 					category: {
 						connect: {
 							id: category_id,
@@ -239,22 +240,5 @@ export const ProductRepository: ProductRepositoryContract = {
 			return result;
 		}
 	},
-	getSimilar: async(sameAs, offset, limit) => {
-		try {
-			
-			return {
-				success: true,
-				data: {
-					products: result
-				}
-			}
-		} catch (error) {
-			console.log(error);
-			let result: ProductDeleteResponse = {
-				success: false,
-				message: "Server Error",
-			};
-			return result;
-		}		
-	},
+
 };

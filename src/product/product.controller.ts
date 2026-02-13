@@ -118,7 +118,7 @@ export const ProductController: ProductControllerContract = {
 	},
 	create: async (req, res) => {
 		try {
-			let { name, price, discount, category_id, blocks, amount } =
+			let { name, price, discount, category_id, blocks, amount, image} =
 				req.body;
 			let errorMessage: string | null = null;
 			switch (true) {
@@ -138,6 +138,9 @@ export const ProductController: ProductControllerContract = {
 					!Number.isInteger(category_id) ||
 					category_id <= 0:
 					errorMessage = "Invalid category_id";
+					break;
+				case typeof image !== "string" || image.length < 10:
+					errorMessage = "Invalid image";
 					break;
 
 				default:
