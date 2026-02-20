@@ -101,8 +101,8 @@ export const ProductService: ProductServiceContract = {
 	},
 	create: async (product) => {
 		try {
-			let trigrams = generateTrigrams(product.name);
-			let query = { ...product };
+			let name_trigrams = prepareTrigramsForDB(product.name);
+			let query = { ...product, name_trigrams};
 			const createdProduct = await ProductRepository.create(query);
 
 			const response: ProductGetByIdSuccessResponse = {
@@ -269,9 +269,17 @@ export const ProductService: ProductServiceContract = {
 					console.log(result);
 				}
 			} else if (popular) {
-				result = await ProductRepository.getPopular(offset, limit);
+				const products = await ProductRepository.getPopular(offset, limit);
+				if (!Array.isArray(products)) {
+					return products;
+				}
+				result = products;
 			} else if (isNew) {
-				result = await ProductRepository.getNew(offset, limit);
+				const products = await ProductRepository.getNew(offset, limit);
+				if (!Array.isArray(products)) {
+					return products;
+				}
+				result = products;
 			} else {
 				result = await ProductRepository.getAll(offset, limit);
 			}
