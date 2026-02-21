@@ -93,6 +93,7 @@ export const UserController: UserControllerContract = {
 	},
 	login: async (req, res) => {
 		try {
+			console.log(req.body)
 			let { password, email } = req.body;
 			let errorMessage: string | null = null;
 			switch (true) {

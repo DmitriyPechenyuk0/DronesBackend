@@ -196,12 +196,7 @@ export interface ProductRepositoryContract {
 	getPopular: (
 		offset?: number,
 		limit?: number,
-	) => Promise<Product[] | ProductErrorResponse>;
-	getSimilar: (
-		sameAs: number,
-		offset?: number,
-		limit?: number,
-	) => Promise<Product[] | ProductErrorResponse>;
+	) => Promise<ProductGetAllResponse>;
 }
 
 export type ProductWhereInput = Prisma.ProductWhereInput;
